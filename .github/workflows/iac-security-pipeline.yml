@@ -39,3 +39,4 @@ jobs:
       # 5. Terraform Apply
       - name: Terraform Apply
         run: terraform -chdir=./Project-1-IaC-Security apply -auto-approve
+        
