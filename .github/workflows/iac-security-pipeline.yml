@@ -11,49 +11,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Check out your repository
       - name: Check out code
         uses: actions/checkout@v2
 
-      # 2. (Optional) Set up AWS credentials if you plan to deploy to AWS
-      #    You can store AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY as GitHub Actions secrets
-      # - name: Configure AWS credentials
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: eu-west-2
+      # Optional: List files to confirm your directory structure
+      - name: List files in root
+        run: ls -al
 
-      # 3. Set up Terraform
+      - name: List files in Project-1 folder
+        run: ls -al Project-1-IaC-Security
+
+      # Set up Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.3.7  # specify your desired version
+          terraform_version: 1.3.7
 
-      # 4. Initialize Terraform
+      # Initialize Terraform in the Project 1 folder
       - name: Terraform Init
         run: terraform init
+        working-directory: ./Project-1-IaC-Security
 
-      # 5. (Optional) Terraform Plan
-      #    This step will only plan, not apply changes. 
-      #    For a fully automated deployment, you could add an apply step after scanning.
+      # (Optional) Terraform Plan
       - name: Terraform Plan
         run: terraform plan
+        working-directory: ./Project-1-IaC-Security
 
-      # 6. Install Trivy
+      # Install Trivy
       - name: Install Trivy
         run: |
-          # Official installation script from Aqua Security
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
 
-      # 7. Run Trivy IaC Scan
+      # Run Trivy IaC Scan on the Project 1 folder
       - name: Trivy IaC Scan
-        run: |
-          # Exit with code 1 if any HIGH or CRITICAL issues are found
-          trivy config --exit-code 1 --severity HIGH,CRITICAL .
+        run: trivy config --exit-code 1 --severity HIGH,CRITICAL ./Project-1-IaC-Security
 
-      # 8. (Optional) Terraform Apply
-      #    If the scan passes, you can apply changes. This is risky in production 
-      #    but might be okay for a demo. Uncomment if desired.
+      # (Optional) Terraform Apply (be cautious in production)
       # - name: Terraform Apply
       #   run: terraform apply -auto-approve
+      #   working-directory: ./Project-1-IaC-Security
