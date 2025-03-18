@@ -1,17 +1,23 @@
-Project 2: Container Security (Docker, Kubernetes)
-Project Overview
-Objective: Deploy and secure a containerized application using Docker & Kubernetes.
-Key Focus: Secure Docker images, configure Kubernetes security policies, and scan for vulnerabilities.
-Technologies Used
-Docker, Kubernetes (Minikube), AWS (EKS)
-Trivy (Image scanning), Kube-Bench (K8s security audit)
-Key Features
-✔️ Secure Docker image creation
-✔️ Kubernetes RBAC & network policies
-✔️ Trivy scan for container vulnerabilities
-✔️ Kube-Bench for Kubernetes security benchmarking
+# 🐳 Project 2: Container Security (Docker, Kubernetes)
 
-Security Considerations
-🔹 RBAC policies restrict unauthorized access
-🔹 Container images scanned with Trivy
-🔹 Kubernetes hardening using Kube-Bench
+## 📌 Project Overview
+This project focuses on securing containerized environments using **Docker** and **Kubernetes**. The goal is to demonstrate best practices for **container security**, **image vulnerability scanning**, and **Kubernetes security hardening**.
+
+## 🛠️ Technologies Used
+- **Docker** – Containerization platform
+- **Kubernetes** – Container orchestration
+- **Trivy** – Image vulnerability scanning
+- **Kube-Bench** – Kubernetes security benchmarking
+- **Minikube** – Local Kubernetes cluster for testing
+
+## 🔑 Key Features
+✅ Secure **Docker image creation** using best practices  
+✅ Image scanning for vulnerabilities using **Trivy**  
+✅ Kubernetes security hardening with **RBAC & Network Policies**  
+✅ **Kube-Bench** scan to enforce Kubernetes security benchmarks  
+
+## 🔒 Security Considerations
+- **Only trusted base images** are used to minimize vulnerabilities  
+- **RBAC (Role-Based Access Control)** to restrict access to Kubernetes resources  
+- **Network policies** to control inter-container communication  
+- **Regular image scanning** to detect vulnerabilities early  

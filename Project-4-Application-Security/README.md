@@ -1,15 +1,22 @@
-Project 4: Application Security & Penetration Testing
-Project Overview
-Objective: Identify and mitigate security vulnerabilities in a web application.
-Key Focus: Perform DAST (Dynamic Application Security Testing) and penetration testing.
-Technologies Used
-OWASP ZAP (DAST), Burp Suite, Metasploit, Kali Linux
-Key Features
-✔️ OWASP ZAP scans for web application vulnerabilities
-✔️ Manual Burp Suite testing for XSS, SQL Injection
-✔️ Metasploit/Kali for real-world attack simulations
+# ☁️ Project 4: Cloud Security (AWS, Azure, GCP)
 
-Security Considerations
-🔹 Identify vulnerabilities using DAST & penetration testing
-🔹 Secure APIs and web application endpoints
-🔹 Ensure compliance with OWASP Top 10
+## 📌 Project Overview
+This project secures cloud infrastructure across AWS, Azure, and GCP. It ensures **IAM hardening**, **network security**, and **threat monitoring** using cloud-native security tools.
+
+## 🛠️ Technologies Used
+- **AWS IAM** – Identity & Access Management  
+- **AWS Security Hub** – Continuous compliance monitoring  
+- **AWS GuardDuty** – Threat detection  
+- **Azure Security Center** – Azure workload protection  
+- **Google Cloud Security Command Center** – GCP security monitoring  
+
+## 🔑 Key Features
+✅ **IAM least privilege enforcement** across cloud platforms  
+✅ **Network Security Groups (NSGs)** to restrict cloud access  
+✅ **AWS GuardDuty threat intelligence** for anomaly detection  
+✅ **Cloud security posture management (CSPM)** to ensure compliance  
+
+## 🔒 Security Considerations
+- **Multi-factor authentication (MFA) enforcement**  
+- **Regular IAM audits** to prevent privilege escalation  
+- **Security logging & monitoring** to detect threats in real-time  

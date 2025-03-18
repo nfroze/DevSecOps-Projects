@@ -1,15 +1,21 @@
-Project 6: Cloud Security & Monitoring
-Project Overview
-Objective: Secure cloud infrastructure and monitor for security threats.
-Key Focus: Implement cloud security best practices and SIEM monitoring.
-Technologies Used
-AWS Security Hub, GuardDuty, CloudTrail, Splunk, ELK
-Key Features
-✔️ AWS GuardDuty for threat detection
-✔️ CloudTrail logs for monitoring AWS activity
-✔️ SIEM (Splunk/ELK) for security event analysis
+# 🔥 Project 6: Threat Modeling & Incident Response
 
-Security Considerations
-🔹 Log monitoring detects unauthorized access
-🔹 AWS GuardDuty alerts for security anomalies
-🔹 CloudTrail audit logs track user activity
+## 📌 Project Overview
+This project involves **threat modeling** and **incident response simulations**, demonstrating how to proactively identify security risks before deployment and respond to threats effectively.
+
+## 🛠️ Technologies Used
+- **MITRE ATT&CK Framework** – Cyber threat classification  
+- **STRIDE Threat Modeling** – Security risk assessment  
+- **SIEM (Security Information & Event Management)** – Log monitoring  
+- **AWS GuardDuty / Azure Sentinel** – Threat detection & response  
+
+## 🔑 Key Features
+✅ **STRIDE threat modeling** for secure architecture design  
+✅ **Simulated security incidents** with response playbooks  
+✅ **SIEM integration** for real-time threat monitoring  
+✅ **MITRE ATT&CK mapping** to known attack techniques  
+
+## 🔒 Security Considerations
+- **Proactive threat detection** using real-world attack scenarios  
+- **Incident response workflow** to mitigate security breaches  
+- **Security automation** to reduce response time to attacks  

@@ -1,15 +1,21 @@
-Project 5: Threat Modeling & Incident Response
-Project Overview
-Objective: Develop a Threat Model and simulate Incident Response workflows.
-Key Focus: Identify security risks, develop mitigation strategies, and create security playbooks.
-Technologies Used
-Draw.io (Threat Modeling Diagrams), MITRE ATT&CK, SIEM (Splunk, ELK)
-Key Features
-✔️ Threat model diagrams for attack scenarios
-✔️ Incident response simulation for security breaches
-✔️ Integration with SIEM for log analysis and alerting
+# 🛡️ Project 5: Application Security & Penetration Testing
 
-Security Considerations
-🔹 Threat models map out attack vectors
-🔹 Incident response workflows improve security readiness
-🔹 SIEM integration ensures real-time monitoring
+## 📌 Project Overview
+This project focuses on securing web applications through **penetration testing (pentesting)**, **DAST scanning**, and **OWASP Top 10** vulnerability mitigation.
+
+## 🛠️ Technologies Used
+- **Burp Suite** – Manual web application pentesting  
+- **OWASP ZAP** – Dynamic Application Security Testing (DAST)  
+- **Metasploit** – Exploitation framework  
+- **Kali Linux** – Ethical hacking tools  
+
+## 🔑 Key Features
+✅ **DAST scanning** to detect real-world application vulnerabilities  
+✅ **Burp Suite testing** for OWASP Top 10 vulnerabilities (e.g., SQLi, XSS)  
+✅ **Automated OWASP ZAP scans** integrated into CI/CD pipeline  
+✅ **Manual penetration testing report** with mitigation recommendations  
+
+## 🔒 Security Considerations
+- **Mitigation strategies** for common web security flaws  
+- **Automated DAST integration** into CI/CD pipeline  
+- **Ethical hacking methodologies** for secure development  
