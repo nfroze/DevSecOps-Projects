@@ -1,63 +1,76 @@
+terraform {
+  backend "s3" {
+    bucket  = "my-terraform-state-bucket"  # Ensure this bucket exists beforehand
+    key     = "project-1-iac-security/terraform.tfstate"
+    region  = "eu-west-2"
+    encrypt = true
+  }
+}
+
 provider "aws" {
   region = "eu-west-2"
 }
 
-# Create an S3 bucket
-resource "aws_s3_bucket" "project_1_iac_security" {
+# Create the Project 1 IaC Security S3 bucket
+resource "aws_s3_bucket" "project_1_iac_security_bucket" {
   bucket        = "project-1-iac-security"
-  # For demos, you can force_destroy to easily remove the bucket later.
   force_destroy = true
 }
 
-# Secure S3 Bucket - Enable Encryption (KMS or AES256)
-resource "aws_s3_bucket_server_side_encryption_configuration" "s3_encryption" {
-  bucket = aws_s3_bucket.project_1_iac_security.id
+# Create a KMS key for encryption
+resource "aws_kms_key" "project_1_iac_security_kms_key" {
+  description = "KMS key for Project 1 IaC Security S3 bucket encryption"
+}
+
+# Enable Server-Side Encryption using KMS
+resource "aws_s3_bucket_server_side_encryption_configuration" "project_1_iac_security_encryption" {
+  bucket = aws_s3_bucket.project_1_iac_security_bucket.id
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-      # If you want to demonstrate KMS, uncomment and specify a KMS key ARN:
-      # sse_algorithm     = "aws:kms"
-      # kms_master_key_id = "arn:aws:kms:eu-west-2:YOUR_ACCOUNT_ID:key/YOUR_KMS_KEY_ID"
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.project_1_iac_security_kms_key.arn
     }
   }
 }
 
-# Secure S3 Bucket - Enable Versioning
-resource "aws_s3_bucket_versioning" "s3_versioning" {
-  bucket = aws_s3_bucket.project_1_iac_security.id
+# Enable Versioning on the bucket
+resource "aws_s3_bucket_versioning" "project_1_iac_security_versioning" {
+  bucket = aws_s3_bucket.project_1_iac_security_bucket.id
 
   versioning_configuration {
     status = "Enabled"
   }
 }
 
-# Secure S3 Bucket - Enable Access Logging
-# (Note: Typically you'd log to a separate bucket, but for simplicity we log here)
-resource "aws_s3_bucket_logging" "s3_logging" {
-  bucket        = aws_s3_bucket.project_1_iac_security.id
-  target_bucket = aws_s3_bucket.project_1_iac_security.id
-  target_prefix = "logs/"
+# Enable Access Logging (logging to the same bucket for demo simplicity)
+resource "aws_s3_bucket_logging" "project_1_iac_security_logging" {
+  bucket        = aws_s3_bucket.project_1_iac_security_bucket.id
+  target_bucket = aws_s3_bucket.project_1_iac_security_bucket.id
+  target_prefix = "project-1-iac-security/logs/"
 }
 
-# Lifecycle Rule
-resource "aws_s3_bucket_lifecycle_configuration" "s3_lifecycle" {
-  bucket = aws_s3_bucket.project_1_iac_security.id
+# Configure a Lifecycle Rule: Expire objects after 365 days and abort incomplete uploads
+resource "aws_s3_bucket_lifecycle_configuration" "project_1_iac_security_lifecycle" {
+  bucket = aws_s3_bucket.project_1_iac_security_bucket.id
 
   rule {
-    id     = "lifecycle-rule"
+    id     = "project-1-iac-security-lifecycle-rule"
     status = "Enabled"
 
-    # Example rule: delete objects older than 365 days
     expiration {
       days = 365
+    }
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
     }
   }
 }
 
-# Block Public Access
-resource "aws_s3_bucket_public_access_block" "s3_public_access_block" {
-  bucket = aws_s3_bucket.project_1_iac_security.id
+# Block Public Access to the bucket
+resource "aws_s3_bucket_public_access_block" "project_1_iac_security_public_access" {
+  bucket = aws_s3_bucket.project_1_iac_security_bucket.id
 
   block_public_acls       = true
   block_public_policy     = true
