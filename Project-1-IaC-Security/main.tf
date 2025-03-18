@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
-    bucket  = "my-terraform-state-bucket"  # Ensure this bucket exists beforehand
-    key     = "project-1-iac-security/terraform.tfstate"
+    bucket  = "my-terraform-state-bucket-devsecops-project"  # Unique state bucket name
+    key     = "project-1-iac-security/terraform.tfstate"       # Unique key for Project 1
     region  = "eu-west-2"
     encrypt = true
   }
@@ -50,7 +50,7 @@ resource "aws_s3_bucket_logging" "project_1_iac_security_logging" {
   target_prefix = "project-1-iac-security/logs/"
 }
 
-# Configure a Lifecycle Rule: Expire objects after 365 days and abort incomplete uploads
+# Configure a Lifecycle Rule (expire objects after 365 days & abort incomplete uploads)
 resource "aws_s3_bucket_lifecycle_configuration" "project_1_iac_security_lifecycle" {
   bucket = aws_s3_bucket.project_1_iac_security_bucket.id
 
@@ -68,7 +68,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "project_1_iac_security_lifecyc
   }
 }
 
-# Block Public Access to the bucket
+# Block Public Access
 resource "aws_s3_bucket_public_access_block" "project_1_iac_security_public_access" {
   bucket = aws_s3_bucket.project_1_iac_security_bucket.id
 
