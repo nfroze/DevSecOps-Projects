@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-2-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-2-secure-app
+  template:
+    metadata:
+      labels:
+        app: project-2-secure-app
+    spec:
+      containers:
+      - name: project-2-secure-app
+        image: nfroze/project-2-secure-app:latest
+        ports:
+        - containerPort: 8080
