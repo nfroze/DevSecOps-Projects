@@ -1,7 +1,3 @@
-name: Project-2-Container-Security Pipeline
-
-on:
-  push:
 name: Project-2-Container-Security-Pipeline
 
 on:
@@ -36,7 +32,7 @@ jobs:
   push-image:
     name: Push Image to Docker Hub
     runs-on: ubuntu-latest
-    needs: [build-and-scan]  # This ensures the build-and-scan job must succeed first
+    needs: build-and-scan  # Only runs if Build & Scan is successful
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -53,25 +49,21 @@ jobs:
   deploy:
     name: Deploy to Kubernetes on EC2
     runs-on: ubuntu-latest
-    needs: [push-image]  # This ensures the image is pushed successfully before deploying
+    needs: push-image  # Only runs if Push to Docker Hub is successful
     steps:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Set up kubectl
+      - name: Set up Kubectl
+        uses: azure/setup-kubectl@v1
+        with:
+          version: 'latest'
+
+      - name: Configure Kubeconfig
         run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG_CONTENT }}" | base64 --decode > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
-          export KUBECONFIG=$HOME/.kube/config
+          echo "${{ secrets.KUBECONFIG_CONTENT }}" > kubeconfig.yaml
+          export KUBECONFIG=kubeconfig.yaml
 
-      - name: Verify Kubernetes Connection
-        run: kubectl get nodes
-
-      - name: Deploy Application to Kubernetes
+      - name: Deploy to Kubernetes on EC2
         run: |
           kubectl apply -f ./Project-2-Container-Security/k8s-manifests/deployment.yaml
-          kubectl apply -f ./Project-2-Container-Security/k8s-manifests/service.yaml
-
-      - name: Verify Deployment
-        run: kubectl get pods -o wide
