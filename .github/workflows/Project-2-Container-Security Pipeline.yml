@@ -58,9 +58,10 @@ jobs:
           export KUBECONFIG=$HOME/.kube/config
 
       - name: Verify Connection to Kubernetes
-        run: kubectl get nodes
+        run: |
+          kubectl get nodes || exit 1  # Ensure connection to cluster or exit if failed
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f ./Project-2-Container-Security/k8s-manifests/deployment.yaml
-          kubectl rollout status deployment project-2-secure-app
+          kubectl apply -f ./Project-2-Container-Security/k8s-manifests/deployment.yaml || exit 1
+          kubectl rollout status deployment project-2-secure-app || exit 1
