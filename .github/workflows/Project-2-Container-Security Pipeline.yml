@@ -73,11 +73,12 @@ jobs:
       - name: Push Docker Image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/project-2-secure-app:latest
 
-      # Step 10: Register ECS Task Definition (Automated)
+      # Step 10: Register ECS Task Definition (Automated for Fargate)
       - name: Register ECS Task Definition
         run: |
           aws ecs register-task-definition \
             --family project-2-secure-app-task \
+            --network-mode awsvpc \
             --container-definitions '[
               {
                 "name": "project-2-secure-app-container",
