@@ -95,9 +95,12 @@ jobs:
             ]' \
             --region ${{ env.AWS_REGION }}
 
-      # Step 11: Create or Update ECS Service
+      # Step 11: Create or Update ECS Service with Hardcoded Subnet ID
       - name: Create or Update ECS Service
         run: |
+          # Hardcoded Subnet ID
+          SUBNET_ID=subnet-005d2407ea83e20eb
+
           # Check if the ECS service exists
           EXISTING_SERVICE=$(aws ecs describe-services --cluster Project-2-Container-Security --services myapp-service --query "services[0].serviceName" --region ${{ env.AWS_REGION }})
 
@@ -109,7 +112,7 @@ jobs:
               --task-definition project-2-secure-app-task \
               --desired-count 1 \
               --launch-type FARGATE \
-              --network-configuration "awsvpcConfiguration={subnets=[subnet-xxxxxxx],assignPublicIp=ENABLED}" \
+              --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_ID],assignPublicIp=ENABLED}" \
               --region ${{ env.AWS_REGION }}
           else
             echo "ECS service exists. Updating it..."
