@@ -1,4 +1,4 @@
-# Use Alpine as the base image
+# Use Python Alpine as the base image
 FROM python:3.9-alpine
 
 # Create a non-root user and group for the application
@@ -9,6 +9,9 @@ USER appuser
 
 # Set the working directory inside the container
 WORKDIR /app
+
+# Install the latest version of setuptools to avoid vulnerabilities
+RUN pip install --upgrade setuptools
 
 # Copy the contents of the local "app" folder into the container's /app folder
 COPY --chown=appuser:appgroup ./app /app
