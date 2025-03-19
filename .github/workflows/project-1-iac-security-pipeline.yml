@@ -1,18 +1,24 @@
-name: Terraform Deployment
+Name: Project-1-IaC-Security Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
+    paths:
+      - "Project-1-IaC-Security/**"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "Project-1-IaC-Security/**"
 
 jobs:
-  terraform-deploy:
+  iac-security:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: Check out code
         uses: actions/checkout@v2
 
-      # Configure AWS credentials from your GitHub Secrets
+      # 1. Configure AWS Credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -20,13 +26,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
 
+      # 2. Set up Terraform
       - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.0.0
+          terraform_version: 1.3.7
 
+      # 3. Terraform Init
       - name: Terraform Init
         run: terraform -chdir=./Project-1-IaC-Security init
 
+      # 4. Terraform Plan
+      - name: Terraform Plan
+        run: terraform -chdir=./Project-1-IaC-Security plan
+
+      # 5. Terraform Apply
       - name: Terraform Apply
         run: terraform -chdir=./Project-1-IaC-Security apply -auto-approve
