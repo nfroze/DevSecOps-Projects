@@ -37,7 +37,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Build Docker Image Again
+      - name: Build Docker Image Again (Ensures Latest Version)
         working-directory: ./Project-2-Container-Security
         run: docker build -t project-2-secure-app:latest .
 
@@ -68,8 +68,9 @@ jobs:
 
       - name: Configure Kubeconfig
         run: |
-          echo "${{ secrets.KUBECONFIG_CONTENT }}" | base64 --decode > kubeconfig.yaml
-          export KUBECONFIG=kubeconfig.yaml
+          echo "${{ secrets.KUBECONFIG_CONTENT }}" | base64 --decode > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+          export KUBECONFIG=$HOME/.kube/config
 
       - name: Verify Connection to Kubernetes
         run: kubectl get nodes
