@@ -45,7 +45,7 @@ jobs:
       - name: Push Docker Image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/project-2-secure-app:latest
 
-      # Step 8: Install kubectl (no Azure dependency)
+      # Step 8: Install kubectl manually
       - name: Install kubectl
         run: |
           curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.24.0/bin/linux/amd64/kubectl
@@ -55,9 +55,9 @@ jobs:
       # Step 9: Set up kubectl with K3s kubeconfig
       - name: Set up kubectl
         run: |
-          echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
-          export KUBECONFIG=kubeconfig.yaml
-          kubectl get nodes
+          echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml  # Save the kubeconfig secret to a file
+          export KUBECONFIG=kubeconfig.yaml                  # Point kubectl to the saved file
+          kubectl get nodes                                  # Check if kubectl can connect to the cluster
 
       # Step 10: Deploy the Docker image to K3s (both deployment and service)
       - name: Deploy to K3s
