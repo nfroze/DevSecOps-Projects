@@ -45,18 +45,19 @@ jobs:
       - name: Push Docker Image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/project-2-secure-app:latest
 
-      # Step 8: Install kubectl
+      # Step 8: Check if KUBECONFIG is set correctly
+      - name: Check KUBECONFIG secret
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml  # Save the kubeconfig secret to a file
+          cat kubeconfig.yaml  # Output the kubeconfig content to verify it
+          kubectl config view  # Verify the config
+          kubectl get nodes    # Verify that kubectl can connect to the cluster
+
+      # Step 9: Set up kubectl
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
         with:
           version: 'v1.24.0'
-
-      # Step 9: Set up kubectl with K3s kubeconfig
-      - name: Set up kubectl with K3s kubeconfig
-        run: |
-          echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml  # Save the kubeconfig secret to a file
-          export KUBECONFIG=kubeconfig.yaml                  # Point kubectl to the saved file
-          kubectl get nodes                                  # Check if kubectl can connect to the cluster
 
       # Step 10: Deploy the Docker image to K3s (both deployment and service)
       - name: Deploy to K3s
