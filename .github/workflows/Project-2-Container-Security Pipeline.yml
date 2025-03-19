@@ -78,7 +78,9 @@ jobs:
         run: |
           aws ecs register-task-definition \
             --family project-2-secure-app-task \
-            --network-mode awsvpc \
+            --network-mode awsvpc \  # Required for Fargate
+            --cpu "256" \            # Example CPU configuration (adjust as needed)
+            --memory "512" \         # Example Memory configuration (adjust as needed)
             --container-definitions '[
               {
                 "name": "project-2-secure-app-container",
