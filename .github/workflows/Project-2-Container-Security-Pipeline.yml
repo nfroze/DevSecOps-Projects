@@ -1,0 +1,30 @@
+name: Project-2-Container-Security Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "Project-2-Container-Security/**"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "Project-2-Container-Security/**"
+
+jobs:
+  container-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Build Docker Image
+        working-directory: ./Project-2-Container-Security
+        run: docker build -t project-2-secure-app .
+
+      - name: Install Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
+
+      - name: Scan Docker Image with Trivy
+        run: trivy image --exit-code 1 --severity HIGH,CRITICAL project-2-secure-app
