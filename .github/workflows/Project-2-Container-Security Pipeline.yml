@@ -81,21 +81,19 @@ jobs:
             --network-mode awsvpc \  # Required for Fargate
             --cpu "256" \            # Example CPU configuration (adjust as needed)
             --memory "512" \         # Example Memory configuration (adjust as needed)
-            --container-definitions '[
-              {
-                "name": "project-2-secure-app-container",
-                "image": "${{ secrets.DOCKERHUB_USERNAME }}/project-2-secure-app:latest",
-                "memory": 512,
-                "cpu": 256,
-                "essential": true,
-                "portMappings": [
-                  {
-                    "containerPort": 80,
-                    "hostPort": 80
-                  }
-                ]
-              }
-            ]' \
+            --container-definitions '[{
+              "name": "project-2-secure-app-container",
+              "image": "${{ secrets.DOCKERHUB_USERNAME }}/project-2-secure-app:latest",
+              "memory": 512,
+              "cpu": 256,
+              "essential": true,
+              "portMappings": [
+                {
+                  "containerPort": 80,
+                  "hostPort": 80
+                }
+              ]
+            }]' \
             --region ${{ env.AWS_REGION }}
 
       # Step 11: Create or Update ECS Service with Hardcoded Subnet ID
