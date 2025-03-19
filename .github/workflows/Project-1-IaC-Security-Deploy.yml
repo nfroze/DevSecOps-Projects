@@ -1,4 +1,4 @@
-name: Terraform Deployment
+name: Project-1-IaC-Security Deploy
 
 on:
   push:
