@@ -28,3 +28,4 @@ jobs:
 
       - name: Scan Docker Image with Trivy
         run: trivy image --exit-code 1 --severity HIGH,CRITICAL project-2-secure-app
+        
