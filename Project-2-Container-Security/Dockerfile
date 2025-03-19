@@ -1,8 +1,8 @@
 # Use Alpine as the base image
 FROM alpine:3.16
 
-# Install any necessary packages (if needed, e.g., for a web server)
-# RUN apk add --no-cache <package-name>
+# Install Python3 (and pip if needed) so we can run a web server
+RUN apk add --no-cache python3
 
 # Create a non-root user and group for the application
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
@@ -10,12 +10,14 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 # Switch to the non-root user
 USER appuser
 
-# Create an application directory and copy your app code (for demo, we'll use a simple script)
+# Set the working directory inside the container
 WORKDIR /app
+
+# Copy the contents of the local "app" folder into the container's /app folder
 COPY --chown=appuser:appgroup ./app /app
 
-# Expose a port (if applicable; adjust as necessary)
+# Expose port 8080 so the container can communicate externally
 EXPOSE 8080
 
-# Define the default command (for demo, a simple echo and sleep)
-CMD ["sh", "-c", "echo 'Hello from a secure container' && sleep 3600"]
+# Run Python's built-in HTTP server on port 8080
+CMD ["python3", "-m", "http.server", "8080"]
