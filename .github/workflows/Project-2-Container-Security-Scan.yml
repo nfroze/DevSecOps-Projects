@@ -1,4 +1,4 @@
-name: Project-2-Container-Security Pipeline
+name: Project-2-Container-Security Scan
 
 on:
   push:
