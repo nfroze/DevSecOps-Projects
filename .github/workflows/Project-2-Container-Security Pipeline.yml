@@ -1,4 +1,4 @@
-name: Full CI/CD Pipeline - Build, Scan, Push, Deploy to ECS
+name: Container Security Pipeline
 
 on:
   push:
@@ -13,113 +13,40 @@ on:
       - "Project-2-Container-Security/**"
 
 jobs:
-  build-scan-push-deploy:
-    name: Build, Scan, Push Docker Image, and Deploy to ECS
+  build-scan-push:
+    name: Build, Scan, and Push Docker Image
     runs-on: ubuntu-latest
 
     env:
-      AWS_REGION: us-west-2  # Specify the region here (change as needed)
+      AWS_REGION: us-west-2  # Specify your AWS region here
 
     steps:
       # Step 1: Checkout the code
       - name: Check out code
         uses: actions/checkout@v2
 
-      # Step 2: Configure AWS credentials
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      # Step 3: Create ECS Cluster if it doesn't exist
-      - name: Create ECS Cluster if it doesn't exist
-        run: |
-          # Check if the ECS cluster exists
-          CLUSTER_EXISTS=$(aws ecs describe-clusters --clusters Project-2-Container-Security --query "clusters[0].clusterName" --region ${{ env.AWS_REGION }})
-
-          # Create the ECS cluster if it doesn't exist
-          if [ "$CLUSTER_EXISTS" == "null" ]; then
-            echo "ECS cluster does not exist. Creating it..."
-            aws ecs create-cluster --cluster-name Project-2-Container-Security --region ${{ env.AWS_REGION }}
-          else
-            echo "ECS cluster already exists."
-          fi
-
-      # Step 4: Build Docker image
+      # Step 2: Build Docker image
       - name: Build Docker Image
         working-directory: ./Project-2-Container-Security
         run: docker build -t nfroze/project-2-secure-app:latest .
 
-      # Step 5: Install Trivy for vulnerability scanning
+      # Step 3: Install Trivy for vulnerability scanning
       - name: Install Trivy
         run: |
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
 
-      # Step 6: Scan Docker image with Trivy for high and critical vulnerabilities
+      # Step 4: Scan Docker image with Trivy for high and critical vulnerabilities
       - name: Scan Docker Image with Trivy
         run: trivy image --exit-code 1 --severity HIGH,CRITICAL nfroze/project-2-secure-app:latest
 
-      # Step 7: Log in to Docker Hub
+      # Step 5: Log in to Docker Hub
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-      # Step 8: Tag Docker image
+      # Step 6: Tag Docker image
       - name: Tag Docker Image
         run: docker tag nfroze/project-2-secure-app:latest ${{ secrets.DOCKERHUB_USERNAME }}/project-2-secure-app:latest
 
-      # Step 9: Push Docker image to Docker Hub
+      # Step 7: Push Docker image to Docker Hub
       - name: Push Docker Image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/project-2-secure-app:latest
-
-      # Step 10: Register ECS Task Definition (Automated for Fargate)
-      - name: Register ECS Task Definition
-        run: |
-          aws ecs register-task-definition \
-            --family project-2-secure-app-task \
-            --network-mode awsvpc \  # Required for Fargate
-            --cpu "256" \            # Example CPU configuration (adjust as needed)
-            --memory "512" \         # Example Memory configuration (adjust as needed)
-            --container-definitions '[{
-              "name": "project-2-secure-app-container",
-              "image": "${{ secrets.DOCKERHUB_USERNAME }}/project-2-secure-app:latest",
-              "memory": 512,
-              "cpu": 256,
-              "essential": true,
-              "portMappings": [
-                {
-                  "containerPort": 80,
-                  "hostPort": 80
-                }
-              ]
-            }]' \
-            --region ${{ env.AWS_REGION }}
-
-      # Step 11: Create or Update ECS Service with Hardcoded Subnet ID
-      - name: Create or Update ECS Service
-        run: |
-          # Hardcoded Subnet ID
-          SUBNET_ID=subnet-005d2407ea83e20eb
-
-          # Check if the ECS service exists
-          EXISTING_SERVICE=$(aws ecs describe-services --cluster Project-2-Container-Security --services myapp-service --query "services[0].serviceName" --region ${{ env.AWS_REGION }})
-
-          if [ "$EXISTING_SERVICE" == "null" ]; then
-            echo "ECS service doesn't exist. Creating it..."
-            aws ecs create-service \
-              --cluster Project-2-Container-Security \
-              --service-name myapp-service \
-              --task-definition project-2-secure-app-task \
-              --desired-count 1 \
-              --launch-type FARGATE \
-              --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_ID],assignPublicIp=ENABLED}" \
-              --region ${{ env.AWS_REGION }}
-          else
-            echo "ECS service exists. Updating it..."
-            aws ecs update-service \
-              --cluster Project-2-Container-Security \
-              --service-name myapp-service \
-              --task-definition project-2-secure-app-task \
-              --region ${{ env.AWS_REGION }}
-          fi
