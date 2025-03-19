@@ -1,8 +1,5 @@
 # Use Alpine as the base image
-FROM alpine:3.16
-
-# Install Python3 (and pip if needed) so we can run a web server
-RUN apk add --no-cache python3
+FROM python:3.9-alpine
 
 # Create a non-root user and group for the application
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
