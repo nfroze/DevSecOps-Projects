@@ -105,7 +105,7 @@ jobs:
             echo "ECS service doesn't exist. Creating it..."
             aws ecs create-service \
               --cluster Project-2-Container-Security \
-              --service myapp-service \
+              --service-name myapp-service \
               --task-definition project-2-secure-app-task \
               --desired-count 1 \
               --launch-type FARGATE \
@@ -115,7 +115,7 @@ jobs:
             echo "ECS service exists. Updating it..."
             aws ecs update-service \
               --cluster Project-2-Container-Security \
-              --service myapp-service \
+              --service-name myapp-service \
               --task-definition project-2-secure-app-task \
               --region ${{ env.AWS_REGION }}
           fi
