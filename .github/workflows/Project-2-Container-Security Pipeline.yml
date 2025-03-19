@@ -50,7 +50,8 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml  # Save the kubeconfig secret to a file
           cat kubeconfig.yaml  # Output the kubeconfig content to verify it
-          kubectl config view  # Verify the config
+          export KUBECONFIG=kubeconfig.yaml  # Explicitly set KUBECONFIG
+          kubectl config view  # Check if the kubeconfig is set correctly
           kubectl get nodes    # Verify that kubectl can connect to the cluster
 
       # Step 9: Set up kubectl
