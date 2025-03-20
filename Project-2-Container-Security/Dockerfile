@@ -1,23 +1,14 @@
-# Use Alpine as the base image
-FROM alpine:3.16
-
-# Install Python3 (and pip if needed) so we can run a web server
-RUN apk add --no-cache python3
-
-# Create a non-root user and group for the application
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
-# Switch to the non-root user
-USER appuser
+# Use the official Python image from Docker Hub as the base image
+FROM python:3.9-slim
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the contents of the local "app" folder into the container's /app folder
-COPY --chown=appuser:appgroup ./app /app
+# Copy the contents of the local "app" directory to the container's /app directory
+COPY app /app
 
-# Expose port 8080 so the container can communicate externally
-EXPOSE 8080
+# Expose port 80 so the container can communicate with the outside world
+EXPOSE 80
 
-# Run Python's built-in HTTP server on port 8080
-CMD ["python3", "-m", "http.server", "8080"]
+# Run Python's built-in HTTP server on port 80
+CMD ["python3", "-m", "http.server", "80"]
