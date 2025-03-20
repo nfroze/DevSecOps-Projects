@@ -10,7 +10,7 @@ This repository contains a collection of DevSecOps projects designed to demonstr
 - **Overview:** Automating infrastructure deployment using Terraform with a focus on secure S3 bucket policies, IAM configurations, and IaC scanning.
 - **Tools:** Terraform, AWS, Checkov
 
-### 📌 Project 2: Container Security (Docker, Kubernetes)
+### 📌 Project 2: Container Security (Docker, ECS)
 - **Overview:** Setting up secure containerized environments with Docker image scanning and Amazon ECS deployments.
 - **Tools:** Docker, ECS, Trivy
 
