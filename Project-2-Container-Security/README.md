@@ -3,6 +3,8 @@
 ## 📌 Project Overview
 This project focuses on securing containerized environments using **Docker** and **Amazon ECS (Elastic Container Service)**. The goal is to demonstrate best practices for **container security**, **image vulnerability scanning**, and **deployment** using ECS with a Docker container.
 
+You can view the live application at: [http://18.175.218.114/](http://18.175.218.114/)
+
 ## 🛠️ Technologies Used
 - **Docker** – Containerization platform to build and run applications in containers.
 - **Amazon ECS** – Managed service for running containers at scale.
