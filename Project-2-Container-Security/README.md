@@ -27,9 +27,9 @@ You can view the live application at: http://18.175.179.154/
 The workflow includes the following steps:
 
 1. **Build Docker image** – Using the Dockerfile, the image is built locally with the contents of the `app` folder.
-2. **Scan Docker image** – The image is scanned using **Trivy** for vulnerabilities, and only the images that pass the scan are pushed to Docker Hub.
+2. **Scan Docker image** – The image is scanned using **Trivy** for vulnerabilities.
 3. **Push Docker image to Docker Hub** – After successful scanning, the Docker image is pushed to Docker Hub for remote storage.
-4. **Deploy to ECS** – Using a GitHub Actions pipeline, the image is pulled from Docker Hub and deployed to an ECS cluster, updating any existing ECS services with the new image.
+4. **Deploy to ECS** – The image is then pulled from Docker Hub and deployed to an ECS cluster, updating the existing ECS service with the new image.
 
 ## 🔄 ECS Update Process
 After the Docker image is updated on Docker Hub:
