@@ -11,8 +11,8 @@ This repository contains a collection of DevSecOps projects designed to demonstr
 - **Tools:** Terraform, AWS, Checkov
 
 ### 📌 Project 2: Container Security (Docker, Kubernetes)
-- **Overview:** Setting up secure containerized environments with Docker image scanning and Kubernetes deployments.
-- **Tools:** Docker, Kubernetes, Trivy, Kube-bench
+- **Overview:** Setting up secure containerized environments with Docker image scanning and Amazon ECS deployments.
+- **Tools:** Docker, ECS, Trivy
 
 ### 📌 Project 3: CI/CD Pipeline Security
 - **Overview:** Building secure CI/CD pipelines that integrate automated security checks such as SAST, SCA, and vulnerability scanning.
