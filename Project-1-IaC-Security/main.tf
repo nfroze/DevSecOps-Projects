@@ -105,7 +105,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "state_bucket_lifecycle" {
     id     = "AbortIncompleteMultipart"
     status = "Enabled"
 
-    # Filter block required by the provider; empty prefix applies the rule to all objects.
     filter {
       prefix = ""
     }
@@ -123,9 +122,10 @@ resource "aws_iam_group" "admins" {
   name = "admins"
 }
 
-resource "aws_iam_group_policy_attachment" "admin_full_access" { # checkov:skip=CKV_AWS_274: AdministratorAccess is intentionally used for demo purposes.
+resource "aws_iam_group_policy_attachment" "admin_full_access" {
   group      = aws_iam_group.admins.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  # checkov:skip=CKV_AWS_274: AdministratorAccess is intentionally used for demo purposes.
 }
 
 resource "aws_iam_group" "developers" {
