@@ -37,7 +37,15 @@ jobs:
       - name: Terraform Init
         run: terraform -chdir=./Project-1-IaC-Security init
 
-      # Run Terraform Plan as a "scan"
+      # Install Checkov for IaC security scanning
+      - name: Install Checkov
+        run: pip install checkov
+
+      # Run Checkov scan on the Terraform configuration
+      - name: Run Checkov Scan
+        run: checkov -d ./Project-1-IaC-Security
+
+      # Run Terraform Plan as an additional check
       - name: Terraform Plan
         run: terraform -chdir=./Project-1-IaC-Security plan
 
