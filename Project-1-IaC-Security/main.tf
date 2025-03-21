@@ -17,7 +17,7 @@ resource "aws_s3_bucket" "project_1_iac_security_bucket" {
   force_destroy = true
 }
 
-# Enable versioning on the S3 bucket
+# Enable versioning on the S3 bucket using the separate versioning resource
 resource "aws_s3_bucket_versioning" "project_1_iac_security_versioning" {
   bucket = aws_s3_bucket.project_1_iac_security_bucket.id
 
@@ -27,9 +27,32 @@ resource "aws_s3_bucket_versioning" "project_1_iac_security_versioning" {
   }
 }
 
-# Define IAM Policy for Admins: Full access to all AWS services
-resource "aws_iam_policy" "admin_s3_full_access" {
-  name        = "AdminS3FullAccess"
+# Enable server-side encryption using the separate resource
+resource "aws_s3_bucket_server_side_encryption" "project_1_iac_security_encryption" {
+  bucket = aws_s3_bucket.project_1_iac_security_bucket.id
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+}
+
+# Block public access for the S3 bucket
+resource "aws_s3_bucket_public_access_block" "project_1_iac_security_public_access" {
+  bucket = aws_s3_bucket.project_1_iac_security_bucket.id
+
+  block_public_acls       = true
+  ignore_public_acls      = true
+  block_public_policy     = true
+  restrict_public_buckets = true
+}
+
+# Create IAM Group Policies for Admins
+resource "aws_iam_policy" "admin_full_access" {
+  name        = "AdminFullAccess"
   description = "Full access to all AWS services"
   policy      = jsonencode({
     Version = "2012-10-17"
@@ -61,10 +84,10 @@ resource "aws_iam_policy" "admin_s3_full_access" {
 # Attach Admin Policy to Admin Group
 resource "aws_iam_group_policy_attachment" "admin_s3_access" {
   group      = aws_iam_group.admins.name
-  policy_arn = aws_iam_policy.admin_s3_full_access.arn
+  policy_arn = aws_iam_policy.admin_full_access.arn
 }
 
-# Define IAM Policy for Developers: Limited access to S3 and EC2
+# Create IAM Group Policies for Developers
 resource "aws_iam_policy" "developer_s3_access" {
   name        = "DeveloperS3Access"
   description = "Read/Write access to S3 and EC2 for developers"
@@ -91,7 +114,7 @@ resource "aws_iam_group_policy_attachment" "developer_s3_access" {
   policy_arn = aws_iam_policy.developer_s3_access.arn
 }
 
-# Define IAM Policy for DevSecOps Engineers: Read-only access to all AWS resources + security-focused permissions
+# Create IAM Group Policies for DevSecOps Engineers
 resource "aws_iam_policy" "devsecops_s3_readonly" {
   name        = "DevSecOpsS3ReadOnly"
   description = "Read-only access to S3 for DevSecOps engineers"
