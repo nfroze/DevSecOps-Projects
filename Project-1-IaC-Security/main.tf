@@ -28,14 +28,12 @@ resource "aws_s3_bucket_versioning" "project_1_iac_security_versioning" {
 }
 
 # Enable server-side encryption using the separate resource
-resource "aws_s3_bucket_server_side_encryption" "project_1_iac_security_encryption" {
+resource "aws_s3_bucket_server_side_encryption_configuration" "project_1_iac_security_encryption" {
   bucket = aws_s3_bucket.project_1_iac_security_bucket.id
 
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"  # Use AES256 for server-side encryption
     }
   }
 }
