@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket  = "my-terraform-state-bucket-devsecops-project"  # Unique state bucket name
-    key     = "project-1-iac-security/terraform.tfstate"       # Unique key for Project 1
+    key     = "project-1-iac-security/terraform.tfstate"     # Unique key for Project 1
     region  = "eu-west-2"
     encrypt = true
   }
@@ -29,51 +29,60 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "project_1_iac_sec
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm     = "aws:kms"
-      kms_master_key_id = aws_kms_key.project_1_iac_security_kms_key.arn
+      kms_master_key_id = aws_kms_key.project_1_iac_security_kms_key.id
     }
   }
 }
 
-# Enable Versioning on the bucket
-resource "aws_s3_bucket_versioning" "project_1_iac_security_versioning" {
-  bucket = aws_s3_bucket.project_1_iac_security_bucket.id
-
-  versioning_configuration {
-    status = "Enabled"
-  }
+# Define IAM Groups
+resource "aws_iam_group" "admins" {
+  name = "admins"
 }
 
-# Enable Access Logging (logging to the same bucket for demo simplicity)
-resource "aws_s3_bucket_logging" "project_1_iac_security_logging" {
-  bucket        = aws_s3_bucket.project_1_iac_security_bucket.id
-  target_bucket = aws_s3_bucket.project_1_iac_security_bucket.id
-  target_prefix = "project-1-iac-security/logs/"
+resource "aws_iam_group" "developers" {
+  name = "developers"
 }
 
-# Configure a Lifecycle Rule (expire objects after 365 days & abort incomplete uploads)
-resource "aws_s3_bucket_lifecycle_configuration" "project_1_iac_security_lifecycle" {
-  bucket = aws_s3_bucket.project_1_iac_security_bucket.id
-
-  rule {
-    id     = "project-1-iac-security-lifecycle-rule"
-    status = "Enabled"
-
-    expiration {
-      days = 365
-    }
-
-    abort_incomplete_multipart_upload {
-      days_after_initiation = 7
-    }
-  }
+resource "aws_iam_group" "devsecops_engineers" {
+  name = "devsecops-engineers"
 }
 
-# Block Public Access
-resource "aws_s3_bucket_public_access_block" "project_1_iac_security_public_access" {
-  bucket = aws_s3_bucket.project_1_iac_security_bucket.id
+resource "aws_iam_group" "sysadmins" {
+  name = "sysadmins"
+}
 
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+# Attach Policies to IAM Groups
+
+# Admin group - Full administrative access
+resource "aws_iam_group_policy_attachment" "admin_policy" {
+  group      = aws_iam_group.admins.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+# Developers group - Limited access to EC2 and S3 for managing infrastructure and application resources
+resource "aws_iam_group_policy_attachment" "developer_policy" {
+  group      = aws_iam_group.developers.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "developer_s3_policy" {
+  group      = aws_iam_group.developers.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"  # Developers can have read-only access to S3, or write access if necessary
+}
+
+# DevSecOps Engineers group - Security-focused policies for auditing and security management
+resource "aws_iam_group_policy_attachment" "devsecops_engineer_policy" {
+  group      = aws_iam_group.devsecops_engineers.name
+  policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
+}
+
+# Sysadmins group - Permissions for infrastructure management without full administrative access
+resource "aws_iam_group_policy_attachment" "sysadmin_s3_policy" {
+  group      = aws_iam_group.sysadmins.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "sysadmin_ec2_policy" {
+  group      = aws_iam_group.sysadmins.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
