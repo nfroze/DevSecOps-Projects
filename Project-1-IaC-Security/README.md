@@ -1,53 +1,60 @@
-# 🌐 Project 1: Infrastructure as Code (IaC) Security
+# 🛠️ Project 1: Infrastructure as Code (IaC) Security
 
 ## 1. Overview 🚀
-This project demonstrates how to **securely provision AWS infrastructure** using **Terraform** while enforcing **least privilege** principles. It integrates **automated IaC security scanning** (via Checkov) within a CI/CD pipeline to verify each change before deployment.
+This project showcases **secure AWS infrastructure provisioning** with **Terraform**, enforcing **least privilege** IAM policies. It features a **two-step CI/CD pipeline**—one job for **IaC scanning** and another for **deployment**—integrating **Checkov** to detect misconfigurations before anything goes live.
 
 ---
 
 ## 2. Key Technologies 🛠
 - **Terraform** ⚙️  
-  Defines AWS resources and manages state via a secured S3 backend.
+  - Defines AWS resources in `main.tf` and manages state via a secured S3 backend.
 - **AWS** ☁️  
-  Focuses on IAM, CloudTrail, GuardDuty for strong access control and monitoring.
+  - Focus on IAM, CloudTrail, GuardDuty, ensuring robust access control and logging.
 - **Checkov** 🔎  
-  Automatically scans Terraform code for misconfigurations and vulnerabilities.
+  - Automatically scans Terraform code for potential security issues or misconfigurations.
 - **GitHub Actions** 🤖  
-  Automates Terraform plan/apply and security checks in the CI/CD workflow.
+  - Orchestrates a multi-job pipeline (scan & deploy) to validate and apply Terraform changes.
 
 ---
 
 ## 3. Security Highlights 🔒
-- **Least Privilege IAM**  
-  Separate roles for admins, developers, and devsecops, each with only the permissions required.
-- **Automated Security Scanning**  
-  Checkov flags issues before code is deployed, ensuring secure configurations.
-- **Remote State Management**  
-  Terraform state stored in a secured S3 backend, providing a single source of truth and preventing state conflicts.
+- **Least Privilege IAM Policies**  
+  - IAM roles (admins, developers, devsecops) each have only the permissions required.
+- **Automated IaC Security Scanning**  
+  - Checkov flags insecure configurations during pull requests, blocking them from merging if issues persist.
+- **Dedicated State Management**  
+  - Terraform’s state stored in an S3 backend, serving as a single source of truth and preventing local conflicts.
+- **Two-Step CI/CD Pipeline**  
+  - Splits security scanning (`iac-scan`) from the actual deployment (`iac-deploy`), ensuring only safe code is applied.
 
 ---
 
 ## 4. CI/CD Workflow 🔄
-1. **Write Code**  
-   - Define AWS resources in `main.tf` using Terraform.
-2. **Scan**  
-   - Checkov runs on pull requests, catching vulnerabilities or misconfigurations early.
-3. **Plan & Apply**  
-   - GitHub Actions validates (`terraform plan`) and deploys (`terraform apply`) the resources to AWS upon approval.
+1. **Code Checkout & AWS Setup**  
+   - The pipeline retrieves source code from the `Project-1-IaC-Security` directory and configures AWS credentials via GitHub Actions secrets.
+2. **Terraform Init**  
+   - Runs `terraform init` within the project folder to prepare necessary plugins and modules.
+3. **Checkov Scan**  
+   - Uses `checkov -d ./Project-1-IaC-Security` to detect security misconfigurations before proceeding.
+4. **Plan & (If Safe) Deploy**  
+   - `terraform plan` helps validate infrastructure changes.  
+   - If scanning passes, the second job (`iac-deploy`) applies (`terraform apply -auto-approve`) the changes to AWS.
+
+> **Note:** The **`iac-deploy`** job only runs if the **`iac-scan`** step succeeds, reflecting a true *shift-left* security model.
 
 ---
 
 ## 5. Value for Organizations 💼
 - **Auditable Deployments**  
-  All infrastructure changes are version-controlled, simplifying traceability and rollback.
-- **Scalable & Repeatable**  
-  Terraform automates provisioning, reducing human error and ensuring consistency.
+  - Version-controlled Terraform code with automated plan/apply ensures traceability and repeatability.
 - **Reduced Attack Surface**  
-  Least privilege IAM policies help prevent unauthorized access.
+  - **Least privilege** IAM roles prevent excessive permissions and mitigate potential breaches.
 - **Early Issue Detection**  
-  Potential security flaws are identified before reaching production, mitigating risk.
+  - Checkov flags issues in pull requests, stopping insecure configurations from reaching production.
+- **Scalable & Repeatable**  
+  - Automated provisioning with Terraform in a managed CI/CD pipeline reduces manual errors and friction.
 
 ---
 
 ## 6. Conclusion ✅
-By combining **Terraform**, **Checkov**, and **GitHub Actions**, this project delivers a **secure, repeatable** deployment workflow. It exemplifies how DevSecOps best practices—including shifting security left—lead to **enhanced compliance** and **robust, reliable infrastructure**.
+By combining **Terraform**, **Checkov**, and **GitHub Actions** in a **two-step** (scan → deploy) pipeline, this project exemplifies **secure, repeatable** IaC practices. The workflow integrates seamlessly with existing Git-based processes, ensuring **only validated configurations** are ever deployed, thereby enhancing **compliance** and **infrastructure reliability**.
