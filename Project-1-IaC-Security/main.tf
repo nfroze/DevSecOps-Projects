@@ -1,4 +1,15 @@
+###############################################################################
+# Terraform Settings
+###############################################################################
 terraform {
+  # (Optional) Pin the AWS provider to a version that supports your setup
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 3.0"
+    }
+  }
+
   backend "s3" {
     bucket  = "my-terraform-state-bucket-devsecops-project"  # Unique state bucket name
     key     = "project-1-iac-security/terraform.tfstate"     # Unique key for Project 1
@@ -11,23 +22,36 @@ provider "aws" {
   region = "eu-west-2"
 }
 
-# Create the Project 1 IaC Security S3 bucket
+###############################################################################
+# S3 Bucket and Security Configurations
+###############################################################################
+# 1) Create the Project 1 IaC Security S3 bucket
 resource "aws_s3_bucket" "project_1_iac_security_bucket" {
   bucket        = "project-1-iac-security"
   force_destroy = true
 }
 
-# Enable versioning on the S3 bucket using the separate versioning resource
+# 2) Block public access using a separate resource
+resource "aws_s3_bucket_public_access_block" "project_1_iac_security_public_access" {
+  bucket = aws_s3_bucket.project_1_iac_security_bucket.bucket
+
+  block_public_acls       = true
+  ignore_public_acls      = true
+  block_public_policy     = true
+  restrict_public_buckets = true
+}
+
+# 3) Enable versioning for the S3 bucket
 resource "aws_s3_bucket_versioning" "project_1_iac_security_versioning" {
   bucket = aws_s3_bucket.project_1_iac_security_bucket.id
 
   versioning_configuration {
-    status    = "Enabled"
+    status     = "Enabled"
     mfa_delete = "Disabled"  # Optional, enable if you want MFA for deletion
   }
 }
 
-# Enable server-side encryption using the separate resource
+# 4) Enable server-side encryption for the S3 bucket
 resource "aws_s3_bucket_server_side_encryption_configuration" "project_1_iac_security_encryption" {
   bucket = aws_s3_bucket.project_1_iac_security_bucket.id
 
@@ -38,141 +62,35 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "project_1_iac_sec
   }
 }
 
-# Block public access for the S3 bucket
-resource "aws_s3_bucket_public_access_block" "project_1_iac_security_public_access" {
-  bucket = aws_s3_bucket.project_1_iac_security_bucket.id
-
-  block_public_acls       = true
-  ignore_public_acls      = true
-  block_public_policy     = true
-  restrict_public_buckets = true
-}
-
-# Create IAM Group Policies for Admins
-resource "aws_iam_policy" "admin_full_access" {
-  name        = "AdminFullAccess"
-  description = "Full access to all AWS services"
-  policy      = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action    = "s3:*"
-        Effect    = "Allow"
-        Resource  = "*"
-      },
-      {
-        Action    = "iam:*"
-        Effect    = "Allow"
-        Resource  = "*"
-      },
-      {
-        Action    = "ec2:*"
-        Effect    = "Allow"
-        Resource  = "*"
-      },
-      {
-        Action    = "vpc:*"
-        Effect    = "Allow"
-        Resource  = "*"
-      }
-    ]
-  })
-}
-
-# Attach Admin Policy to Admin Group
-resource "aws_iam_group_policy_attachment" "admin_s3_access" {
-  group      = aws_iam_group.admins.name
-  policy_arn = aws_iam_policy.admin_full_access.arn
-}
-
-# Create IAM Group Policies for Developers
-resource "aws_iam_policy" "developer_s3_access" {
-  name        = "DeveloperS3Access"
-  description = "Read/Write access to S3 and EC2 for developers"
-  policy      = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action    = ["s3:GetObject", "s3:PutObject"]
-        Effect    = "Allow"
-        Resource  = "arn:aws:s3:::project-1-iac-security/*"  # Access to specific bucket
-      },
-      {
-        Action    = ["ec2:Describe*", "ec2:StartInstances", "ec2:StopInstances"]
-        Effect    = "Allow"
-        Resource  = "*"
-      }
-    ]
-  })
-}
-
-# Attach Developer Policy to Developer Group
-resource "aws_iam_group_policy_attachment" "developer_s3_access" {
-  group      = aws_iam_group.developers.name
-  policy_arn = aws_iam_policy.developer_s3_access.arn
-}
-
-# Create IAM Group Policies for DevSecOps Engineers
-resource "aws_iam_policy" "devsecops_s3_readonly" {
-  name        = "DevSecOpsS3ReadOnly"
-  description = "Read-only access to S3 for DevSecOps engineers"
-  policy      = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action    = "s3:GetObject"
-        Effect    = "Allow"
-        Resource  = "arn:aws:s3:::*/*"  # Read-only access to all S3 buckets
-      }
-    ]
-  })
-}
-
-resource "aws_iam_policy" "devsecops_security_access" {
-  name        = "DevSecOpsSecurityAccess"
-  description = "Full access to security services (GuardDuty, CloudTrail, etc.)"
-  policy      = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action    = "iam:List*"
-        Effect    = "Allow"
-        Resource  = "*"
-      },
-      {
-        Action    = "cloudtrail:DescribeTrails"
-        Effect    = "Allow"
-        Resource  = "*"
-      },
-      {
-        Action    = "guardduty:ListDetectors"
-        Effect    = "Allow"
-        Resource  = "*"
-      }
-    ]
-  })
-}
-
-# Attach DevSecOps Policies to DevSecOps Engineers Group
-resource "aws_iam_group_policy_attachment" "devsecops_s3_readonly" {
-  group      = aws_iam_group.devsecops_engineers.name
-  policy_arn = aws_iam_policy.devsecops_s3_readonly.arn
-}
-
-resource "aws_iam_group_policy_attachment" "devsecops_security_access" {
-  group      = aws_iam_group.devsecops_engineers.name
-  policy_arn = aws_iam_policy.devsecops_security_access.arn
-}
-
-# Create User Groups
+###############################################################################
+# IAM Groups and Policy Attachments
+###############################################################################
+# Admins
 resource "aws_iam_group" "admins" {
   name = "admins"
 }
 
+resource "aws_iam_group_policy_attachment" "admin_full_access" {
+  group      = aws_iam_group.admins.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+# Developers
 resource "aws_iam_group" "developers" {
   name = "developers"
 }
 
+resource "aws_iam_group_policy_attachment" "developer_full_access" {
+  group      = aws_iam_group.developers.name
+  policy_arn = "arn:aws:iam::aws:policy/PowerUserAccess"
+}
+
+# DevSecOps Engineers
 resource "aws_iam_group" "devsecops_engineers" {
   name = "devsecops-engineers"
+}
+
+resource "aws_iam_group_policy_attachment" "devsecops_read_only" {
+  group      = aws_iam_group.devsecops_engineers.name
+  policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
 }
