@@ -30,7 +30,7 @@ resource "aws_kms_key" "state_bucket_kms" {
   enable_key_rotation = true
 
   policy = jsonencode({
-    Version   = "2012-10-17"
+    Version   = "2012-10-17",
     Statement = [
       {
         Sid       = "Allow administration of the key",
@@ -118,7 +118,6 @@ resource "aws_iam_group" "admins" {
   name = "admins"
 }
 
-# Using AdministratorAccess is intentional for the demo admin group.
 # checkov:skip=CKV_AWS_274: AdministratorAccess is intentionally used for demo purposes.
 resource "aws_iam_group_policy_attachment" "admin_full_access" {
   group      = aws_iam_group.admins.name
