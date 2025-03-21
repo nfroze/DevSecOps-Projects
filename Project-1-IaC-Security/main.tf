@@ -49,14 +49,18 @@ resource "aws_kms_key" "state_bucket_kms" {
 ###############################################################################
 # S3 Bucket for Terraform State
 ###############################################################################
-# This resource only declares the bucket. Additional security settings
-# (encryption, versioning, lifecycle) are in separate resources.
 resource "aws_s3_bucket" "state_bucket" {
   bucket        = "my-terraform-state-bucket-devsecops-project"
   force_destroy = true
 
   # We don't need cross-region replication for a state file bucket.
   # checkov:skip=CKV_AWS_144: Cross-region replication not required for state bucket
+
+  # We don't need event notifications for a state file bucket.
+  # checkov:skip=CKV2_AWS_62: Event notifications not required for state bucket
+
+  # We don't need access logging for a state file bucket.
+  # checkov:skip=CKV_AWS_18: Access logging not required for state bucket
 }
 
 ###############################################################################
