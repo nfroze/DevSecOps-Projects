@@ -118,10 +118,10 @@ resource "aws_iam_group" "admins" {
   name = "admins"
 }
 
-# checkov:skip=CKV_AWS_274: AdministratorAccess is intentionally used for demo purposes.
 resource "aws_iam_group_policy_attachment" "admin_full_access" {
   group      = aws_iam_group.admins.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  # checkov:skip=CKV_AWS_274: AdministratorAccess is intentionally used for demo purposes.
 }
 
 resource "aws_iam_group" "developers" {
