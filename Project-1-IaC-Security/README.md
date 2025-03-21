@@ -79,8 +79,3 @@ This **Project 1** showcases the importance of using **Infrastructure as Code** 
 Implementing this solution helps companies improve their **security posture**, ensure **consistent infrastructure provisioning**, and make the deployment process **more reliable** and **automated**, reducing manual errors and enabling faster delivery of secure environments.
 
 ---
-
-### Conclusion:
-This README now follows the **same structure** as **Project 2** and clearly highlights the **specific competencies** demonstrated in **Project 1**. It explains **what was done** and **how it benefits companies** in terms of **security**, **efficiency**, and **automation**.
-
-Let me know if you need further adjustments or additions!
