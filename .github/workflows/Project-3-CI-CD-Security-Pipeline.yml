@@ -1,0 +1,75 @@
+name: Project-3-CI-CD-Security
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "Project-3-CI-CD-Security/**"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "Project-3-CI-CD-Security/**"
+
+jobs:
+  cicd-security:
+    name: CI/CD Security Pipeline
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out code
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      # 2. Set up Node
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # 3. Install dependencies
+      - name: Install Dependencies
+        working-directory: ./Project-3-CI-CD-Security
+        run: npm install
+
+      # 4. Install Semgrep (CLI)
+      - name: Install Semgrep
+        run: pip install semgrep
+
+      # 5. SAST with Semgrep
+      - name: SAST (Semgrep)
+        run: semgrep --config p/ci --include='Project-3-CI-CD-Security/**/*.js'
+
+      # 6. SCA with npm audit (Dependency check)
+      - name: SCA (npm audit)
+        working-directory: ./Project-3-CI-CD-Security
+        run: npm audit --audit-level=high
+
+      # 7. Install Gitleaks
+      - name: Install Gitleaks
+        run: |
+          curl -s https://api.github.com/repos/gitleaks/gitleaks/releases/latest \
+          | grep "browser_download_url.*linux.x86_64" \
+          | cut -d : -f 2,3 \
+          | tr -d \" \
+          | wget -O gitleaks.tar.gz -qi -
+          tar -xvf gitleaks.tar.gz gitleaks
+          sudo mv gitleaks /usr/local/bin/
+
+      # 8. Secrets Scanning with Gitleaks
+      - name: Run Gitleaks
+        working-directory: ./Project-3-CI-CD-Security
+        run: gitleaks detect --source . --exit-code 1
+
+      # 9. Run Jest Tests
+      - name: Run Tests
+        working-directory: ./Project-3-CI-CD-Security
+        run: npm test
+
+      # 10. (Optional) Deploy Step
+      # - name: Deploy to Heroku
+      #   if: success()
+      #   working-directory: ./Project-3-CI-CD-Security
+      #   run: |
+      #     heroku login
+      #     heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
+      #     git push heroku main

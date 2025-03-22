@@ -1,0 +1,19 @@
+{
+  "name": "project-3-ci-cd-security",
+  "version": "1.0.0",
+  "description": "This project implements a secure CI/CD pipeline that integrates automated security checks into the software development lifecycle (SDLC). The pipeline scans for security misconfigurations, vulnerabilities, and secrets.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
+}
