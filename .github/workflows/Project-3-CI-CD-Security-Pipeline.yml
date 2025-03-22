@@ -31,7 +31,7 @@ jobs:
         working-directory: ./Project-3-CI-CD-Security
         run: npm install
 
-      # 4. Install Semgrep (CLI)
+      # 4. Install Semgrep (CLI via pip)
       - name: Install Semgrep
         run: pip install semgrep
 
@@ -44,15 +44,11 @@ jobs:
         working-directory: ./Project-3-CI-CD-Security
         run: npm audit --audit-level=high
 
-      # 7. Install Gitleaks
+      # 7. Install Gitleaks (Fixed version v8.20.1)
       - name: Install Gitleaks
         run: |
-          curl -s https://api.github.com/repos/gitleaks/gitleaks/releases/latest \
-          | grep "browser_download_url.*linux.x86_64" \
-          | cut -d : -f 2,3 \
-          | tr -d \" \
-          | wget -O gitleaks.tar.gz -qi -
-          tar -xvf gitleaks.tar.gz gitleaks
+          curl -LO https://github.com/gitleaks/gitleaks/releases/download/v8.20.1/gitleaks_8.20.1_linux_x64.tar.gz
+          tar -zxvf gitleaks_8.20.1_linux_x64.tar.gz
           sudo mv gitleaks /usr/local/bin/
 
       # 8. Secrets Scanning with Gitleaks
