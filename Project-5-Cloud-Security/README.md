@@ -1,21 +1,22 @@
-# 🛡️ Project 5: Application Security & Penetration Testing
+# ☁️ Project 5: Cloud Security (AWS, Azure, GCP)
 
 ## 📌 Project Overview
-This project focuses on securing web applications through **penetration testing (pentesting)**, **DAST scanning**, and **OWASP Top 10** vulnerability mitigation.
+This project secures cloud infrastructure across AWS, Azure, and GCP. It ensures **IAM hardening**, **network security**, and **threat monitoring** using cloud-native security tools.
 
 ## 🛠️ Technologies Used
-- **Burp Suite** – Manual web application pentesting  
-- **OWASP ZAP** – Dynamic Application Security Testing (DAST)  
-- **Metasploit** – Exploitation framework  
-- **Kali Linux** – Ethical hacking tools  
+- **AWS IAM** – Identity & Access Management  
+- **AWS Security Hub** – Continuous compliance monitoring  
+- **AWS GuardDuty** – Threat detection  
+- **Azure Security Center** – Azure workload protection  
+- **Google Cloud Security Command Center** – GCP security monitoring  
 
 ## 🔑 Key Features
-✅ **DAST scanning** to detect real-world application vulnerabilities  
-✅ **Burp Suite testing** for OWASP Top 10 vulnerabilities (e.g., SQLi, XSS)  
-✅ **Automated OWASP ZAP scans** integrated into CI/CD pipeline  
-✅ **Manual penetration testing report** with mitigation recommendations  
+✅ **IAM least privilege enforcement** across cloud platforms  
+✅ **Network Security Groups (NSGs)** to restrict cloud access  
+✅ **AWS GuardDuty threat intelligence** for anomaly detection  
+✅ **Cloud security posture management (CSPM)** to ensure compliance  
 
 ## 🔒 Security Considerations
-- **Mitigation strategies** for common web security flaws  
-- **Automated DAST integration** into CI/CD pipeline  
-- **Ethical hacking methodologies** for secure development  
+- **Multi-factor authentication (MFA) enforcement**  
+- **Regular IAM audits** to prevent privilege escalation  
+- **Security logging & monitoring** to detect threats in real-time  

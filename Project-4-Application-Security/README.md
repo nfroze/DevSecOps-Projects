@@ -1,22 +1,21 @@
-# ☁️ Project 4: Cloud Security (AWS, Azure, GCP)
+# 🛡️ Project 4: Application Security & Penetration Testing
 
 ## 📌 Project Overview
-This project secures cloud infrastructure across AWS, Azure, and GCP. It ensures **IAM hardening**, **network security**, and **threat monitoring** using cloud-native security tools.
+This project focuses on securing web applications through **penetration testing (pentesting)**, **DAST scanning**, and **OWASP Top 10** vulnerability mitigation.
 
 ## 🛠️ Technologies Used
-- **AWS IAM** – Identity & Access Management  
-- **AWS Security Hub** – Continuous compliance monitoring  
-- **AWS GuardDuty** – Threat detection  
-- **Azure Security Center** – Azure workload protection  
-- **Google Cloud Security Command Center** – GCP security monitoring  
+- **Burp Suite** – Manual web application pentesting  
+- **OWASP ZAP** – Dynamic Application Security Testing (DAST)  
+- **Metasploit** – Exploitation framework  
+- **Kali Linux** – Ethical hacking tools  
 
 ## 🔑 Key Features
-✅ **IAM least privilege enforcement** across cloud platforms  
-✅ **Network Security Groups (NSGs)** to restrict cloud access  
-✅ **AWS GuardDuty threat intelligence** for anomaly detection  
-✅ **Cloud security posture management (CSPM)** to ensure compliance  
+✅ **DAST scanning** to detect real-world application vulnerabilities  
+✅ **Burp Suite testing** for OWASP Top 10 vulnerabilities (e.g., SQLi, XSS)  
+✅ **Automated OWASP ZAP scans** integrated into CI/CD pipeline  
+✅ **Manual penetration testing report** with mitigation recommendations  
 
 ## 🔒 Security Considerations
-- **Multi-factor authentication (MFA) enforcement**  
-- **Regular IAM audits** to prevent privilege escalation  
-- **Security logging & monitoring** to detect threats in real-time  
+- **Mitigation strategies** for common web security flaws  
+- **Automated DAST integration** into CI/CD pipeline  
+- **Ethical hacking methodologies** for secure development  
