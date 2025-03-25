@@ -1,4 +1,4 @@
-name: Project-1-IaC-Security-Pipeline
+name: Project 1 IaC Security
 
 on:
   push:
