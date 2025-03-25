@@ -4,11 +4,11 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - "Project-1-IaC-Security/**"
+      - "Project 1/**"
   pull_request:
     branches: [ "main" ]
     paths:
-      - "Project-1-IaC-Security/**"
+      - "Project 1/**"
 
 jobs:
   iac-scan:
@@ -35,7 +35,7 @@ jobs:
 
       # Initialize Terraform in the Project-1 folder
       - name: Terraform Init
-        run: terraform -chdir=./Project-1-IaC-Security init
+        run: terraform -chdir=./Project 1 init
 
       # Install Checkov for IaC security scanning
       - name: Install Checkov
@@ -43,11 +43,11 @@ jobs:
 
       # Run Checkov scan on the Terraform configuration
       - name: Run Checkov Scan
-        run: checkov -d ./Project-1-IaC-Security
+        run: checkov -d ./Project 1
 
       # Run Terraform Plan as an additional check
       - name: Terraform Plan
-        run: terraform -chdir=./Project-1-IaC-Security plan
+        run: terraform -chdir=./Project 1 plan
 
   iac-deploy:
     name: IaC Deploy
@@ -74,8 +74,8 @@ jobs:
 
       # Initialize Terraform
       - name: Terraform Init
-        run: terraform -chdir=./Project-1-IaC-Security init
+        run: terraform -chdir=./Project 1 init
 
       # Deploy the infrastructure with Terraform Apply
       - name: Terraform Apply
-        run: terraform -chdir=./Project-1-IaC-Security apply -auto-approve
+        run: terraform -chdir=./Project 1 apply -auto-approve

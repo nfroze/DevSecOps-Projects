@@ -5,14 +5,14 @@ on:
     branches:
       - main
     paths:
-      - "Project-2-Image-And-Application-Security/**"
-      - "!Project-2-Image-And-Application-Security/README.md"
+      - "Project 2/**"
+      - "!Project 2/README.md"
   pull_request:
     branches:
       - main
     paths:
-      - "Project-2-Image-And-Application-Security/**"
-      - "!Project-2-Image-And-Application-Security/README.md"
+      - "Project 2/**"
+      - "!Project 2/README.md"
 
 jobs:
   build-scan-push:
@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build Docker Image
-        working-directory: ./Project-2-Image-And-Application-Security
+        working-directory: ./Project 2
         run: docker build -t nfroze/project-2-secure-app:latest .
 
       - name: Install Trivy for vulnerability scanning
