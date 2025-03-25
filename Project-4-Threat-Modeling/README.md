@@ -1,4 +1,4 @@
-# 🔥 Project 6: Threat Modeling & Incident Response
+# 🔥 Project 4: Threat Modeling & Incident Response
 
 ## 📌 Project Overview
 This project involves **threat modeling** and **incident response simulations**, demonstrating how to proactively identify security risks before deployment and respond to threats effectively.
