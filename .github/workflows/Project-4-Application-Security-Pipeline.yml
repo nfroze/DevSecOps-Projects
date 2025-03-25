@@ -29,7 +29,7 @@ jobs:
 
       - name: Run OWASP ZAP Full Scan
         run: |
-          docker run --rm owasp/zap2docker-stable zap-full-scan.py -t http://localhost:3000 -r zap_report.html
+          docker run --rm -v $(pwd)/zap-report:/zap/wrk ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py -t http://localhost:3000 -r zap_report.html
 
       - name: Stop Juice Shop Container
         run: docker stop juice-shop
