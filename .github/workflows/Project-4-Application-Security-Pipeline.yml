@@ -1,4 +1,4 @@
-name: Project-4-Application-Security
+name: DAST Scan - Juice Shop
 
 on:
   push:
@@ -18,21 +18,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
+      - name: Check out repository
         uses: actions/checkout@v2
 
       - name: Start Juice Shop Container
         run: |
           docker run -d --name juice-shop -p 3000:3000 bkimminich/juice-shop
-          # Wait for the container to be fully up and running
+          # Wait 30 seconds for the application to fully start
           sleep 30
 
       - name: Run OWASP ZAP Full Scan
         run: |
-          docker run --rm owasp/zap2docker-stable zap-full-scan.py -t http://localhost:3000 -r zap_report.html
+          docker run --rm -v $(pwd)/zap-report:/zap/wrk owasp/zap2docker-stable zap-full-scan.py -t http://localhost:3000 -r zap_report.html
 
       - name: Upload ZAP Report Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: zap-report
           path: zap_report.html
