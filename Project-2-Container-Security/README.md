@@ -54,11 +54,8 @@ This project demonstrates how to **securely build, scan, and deploy** a containe
 - **Stabilization Period:**  
   - The pipeline waits for the ECS deployment to stabilize.
 - **OWASP ZAP Full Scan:**  
-  - Using the stable OWASP ZAP image (from GitHub Container Registry), a full scan is run against the public endpoint of the ECS service (pointed to by a load balancer).
-  - The scan generates a report (`zap_report.html`), which warns of vulnerabilities without failing the build.
-- **(Optional)** The scan report can be uploaded to a central storage (e.g., an S3 bucket) for further analysis.
-
-> **Note:** The ECS service must have a stable endpoint (e.g., behind an Application Load Balancer) with a DNS name that includes the protocol (`http://` or `https://`). This URL is stored as a GitHub Secret and referenced during the DAST scan.
+  - Using the stable OWASP ZAP image, a full scan is run against the public endpoint of the ECS service (pointed to by a load balancer).
+  - The scan generates a report (`zap_report.html`), which warns of vulnerabilities (without failing the build for demo purposes).
 
 ---
 
