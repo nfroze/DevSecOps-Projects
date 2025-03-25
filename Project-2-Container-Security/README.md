@@ -1,19 +1,21 @@
-# 🐳 Project 2: Container Security (Docker, ECS)
+# 🐳 Project 2: Image and Application Security
 
 ## 1. Overview 🚀
-This project demonstrates how to **securely build, scan, and deploy** a containerized application using **Docker** and **Amazon ECS**. The pipeline employs **Trivy** for vulnerability scanning and **GitHub Actions** for continuous integration and delivery, ensuring security checks occur automatically before new images reach ECS.
+This project demonstrates how to **securely build, scan, and deploy** a containerized application using **Docker** and **Amazon ECS**—with an additional focus on dynamic application security testing (DAST). The CI/CD pipeline employs **Trivy** for container image vulnerability scanning and **OWASP ZAP** for DAST scanning, ensuring that both the static image and the live application are secure before updates are pushed to production.
 
 ---
 
 ## 2. Key Technologies 🛠
 - **Docker** ⚙️  
-  - Packages the application into a container, including static content (`index.html`) for demonstration.
+  - Packages the application (including static content like `index.html`) into a container image.
 - **Amazon ECS** ☁️  
-  - A fully managed container orchestration service, handling rolling updates for minimal downtime.
+  - A fully managed container orchestration service that handles rolling updates, ensuring minimal downtime.
 - **Trivy** 🔎  
-  - Scans Docker images for high and critical vulnerabilities, preventing insecure images from being deployed.
+  - Scans Docker images for **HIGH** and **CRITICAL** vulnerabilities, preventing insecure images from being deployed.
+- **OWASP ZAP** 🛡  
+  - Performs dynamic application security testing (DAST) on the running ECS service to identify vulnerabilities in the live application.
 - **GitHub Actions** 🤖  
-  - Runs a two-job pipeline to build & scan, then update ECS if scans pass, reinforcing shift-left security.
+  - Automates the entire pipeline—from image build, vulnerability scanning, ECS deployment, to DAST scanning—enforcing shift-left security.
 
 ---
 
@@ -21,48 +23,56 @@ This project demonstrates how to **securely build, scan, and deploy** a containe
 - **Trusted Base Images**  
   - The Dockerfile starts with an official, verified base image to reduce inherent vulnerabilities.
 - **Automated Vulnerability Scanning**  
-  - **Trivy** checks each build for high or critical vulnerabilities, halting deployment if any are found.
+  - **Trivy** checks each built image for critical vulnerabilities, halting deployment if any issues are found.
+- **Dynamic Application Security Testing (DAST)**  
+  - **OWASP ZAP** scans the live application running on ECS, identifying vulnerabilities such as XSS, SQL Injection, and misconfigurations.
 - **Least Privilege IAM Roles**  
-  - ECS tasks and services are granted only the permissions they actually need, minimizing attack surfaces.
-- **Continuous Delivery**  
-  - Containers are automatically rebuilt, rescanned, and redeployed with every eligible code change, ensuring up-to-date security.
+  - ECS tasks and services are granted only the permissions they require, minimizing the attack surface.
+- **Continuous Delivery & Feedback**  
+  - Every code push triggers a pipeline that builds and scans the image, deploys it to ECS, and dynamically tests the live application, ensuring a secure and consistent release process.
 
 ---
 
 ## 4. CI/CD Workflow 🔄
 ### Job 1: Build, Scan, and Push
-1. **Checkout**  
-   - Fetches the repository source for the `Project-2-Container-Security` directory.
-2. **Build Docker Image**  
-   - Constructs the Docker image (using the provided `Dockerfile`) tagged as `latest`.
-3. **Install & Run Trivy**  
-   - Trivy scans the newly built image for **HIGH** and **CRITICAL** vulnerabilities.
-   - Deployment stops if the scan fails, ensuring no insecure images are pushed.
-4. **Docker Hub Push**  
-   - Logs in using GitHub secrets, then pushes the image to Docker Hub.
+1. **Checkout:**  
+   - The pipeline fetches the repository source from the `Project-2-Container-Security` directory.
+2. **Build Docker Image:**  
+   - The image is built using a provided `Dockerfile` and tagged as `latest`.
+3. **Trivy Vulnerability Scan:**  
+   - The newly built image is scanned with Trivy for **HIGH** and **CRITICAL** vulnerabilities. If issues are found, deployment stops.
+4. **Push to Docker Hub:**  
+   - Using GitHub secrets for authentication, the image is tagged and pushed to Docker Hub.
 
 ### Job 2: Update ECS
-- **AWS Credentials**  
-  - Configures AWS credentials (from secrets) to interact with ECS.
-- **ECS Deployment**  
-  - Runs `aws ecs update-service --force-new-deployment`, pulling the **latest secure** image to ECS.  
-  - Old tasks are seamlessly replaced, maintaining **zero downtime**.
+- **AWS Credentials:**  
+  - The pipeline configures AWS credentials from secrets to interact with ECS.
+- **ECS Deployment:**  
+  - The ECS service is updated (using a force-new-deployment command) to pull the latest secure image, ensuring zero downtime through rolling updates.
 
-> **Note**: The second job (`ecs-update`) only runs **if the first job succeeds**, reflecting a true *shift-left* approach where images must pass security scans before ECS updates occur.
+### Job 3: DAST Scan
+- **Stabilization Period:**  
+  - The pipeline waits for the ECS deployment to stabilize.
+- **OWASP ZAP Full Scan:**  
+  - Using the stable OWASP ZAP image (from GitHub Container Registry), a full scan is run against the public endpoint of the ECS service (pointed to by a load balancer).
+  - The scan generates a report (`zap_report.html`), which warns of vulnerabilities without failing the build.
+- **(Optional)** The scan report can be uploaded to a central storage (e.g., an S3 bucket) for further analysis.
+
+> **Note:** The ECS service must have a stable endpoint (e.g., behind an Application Load Balancer) with a DNS name that includes the protocol (`http://` or `https://`). This URL is stored as a GitHub Secret and referenced during the DAST scan.
 
 ---
 
 ## 5. Value for Organizations 💼
-- **Early Vulnerability Detection**  
-  - High and critical issues never reach production, significantly reducing security risks.
-- **Automated Release Cycle**  
-  - The pipeline builds and deploys your app without manual intervention, speeding up go-to-market.
-- **Scalable & Reliable**  
-  - ECS easily handles fluctuating workloads, with rolling updates ensuring continuous service availability.
-- **Proactive Security Posture**  
-  - Continuous scanning and enforced least privilege stand as pillars of DevSecOps best practices.
+- **Early Vulnerability Detection:**  
+  - Both the image and the live application are continuously scanned, ensuring that vulnerabilities are caught early.
+- **Automated Secure Release Cycle:**  
+  - The pipeline automates the build, scan, and deployment process, reducing manual intervention and speeding up go-to-market.
+- **Proactive Security Posture:**  
+  - Integrating static (Trivy) and dynamic (OWASP ZAP) scans into the CI/CD pipeline helps maintain a robust security posture and reduces risk.
+- **Scalability & Reliability:**  
+  - ECS handles rolling updates and scaling, ensuring continuous availability even as new images are deployed.
 
 ---
 
 ## 6. Conclusion ✅
-By integrating **Docker**, **Trivy**, **ECS**, and **GitHub Actions** into a cohesive pipeline, this project achieves **secure, automated** container deployments. Each code push triggers a **build-and-scan** job, followed by an **ECS update** if the image passes vulnerability checks. This flow ensures a **consistent, repeatable** release process that aligns with modern DevSecOps principles—reducing risk while maintaining agility.
+By integrating **Docker**, **Trivy**, **OWASP ZAP**, **ECS**, and **GitHub Actions** into one cohesive pipeline, this project demonstrates a modern approach to securing both the container image and the live application. Each code push triggers a build-and-scan job, followed by an ECS update and a dynamic scan against the deployed service. This flow ensures a **consistent, repeatable** release process that aligns with best practices in DevSecOps, reducing risk while maintaining agility.
