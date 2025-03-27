@@ -1,69 +1,60 @@
-# 🛠️ Project 1: CI/CD Pipeline Security
+# 🛠️ Project 3: Infrastructure as Code (IaC) Security
 
 ## 1. Overview 🚀
-This project demonstrates how to **secure a CI/CD pipeline** for a Node.js application by integrating **automated security checks**:
-- **SAST** (Semgrep)
-- **SCA** (npm audit)
-- **Secrets Scanning** (Gitleaks)
-- **Automated Testing** (Jest)
-
-By shifting these checks left, we ensure that only secure, well-tested code is merged and potentially deployed.
+This project showcases **secure AWS infrastructure provisioning** with **Terraform**, enforcing **least privilege** IAM policies. It features a **two-step CI/CD pipeline**—one job for **IaC scanning** and another for **deployment**—integrating **Checkov** to detect misconfigurations before anything goes live.
 
 ---
 
 ## 2. Key Technologies 🛠
-- **Node.js** ⚙️  
-  - Runs the application and provides the npm ecosystem for packages and scripts.
+- **Terraform** ⚙️  
+  - Defines AWS resources in `main.tf` and manages state via a secured S3 backend.
+- **AWS** ☁️  
+  - Focus on IAM, CloudTrail, GuardDuty, ensuring robust access control and logging.
+- **Checkov** 🔎  
+  - Automatically scans Terraform code for potential security issues or misconfigurations.
 - **GitHub Actions** 🤖  
-  - Automates the security scans and testing whenever code is pushed or a pull request is created.
-- **Semgrep** 🔎  
-  - Examines source code for insecure patterns or vulnerabilities (SAST).
-- **npm audit** 📦  
-  - Checks Node dependencies for known CVEs or security issues.
-- **Gitleaks** 🔐  
-  - Detects accidental commits of secrets (tokens, credentials).
-- **Jest** 🧪  
-  - Runs unit and integration tests to ensure the application works as expected.
+  - Orchestrates a multi-job pipeline (scan & deploy) to validate and apply Terraform changes.
 
 ---
 
 ## 3. Security Highlights 🔒
-- **Early Vulnerability Detection**  
-  - `npm audit` and Semgrep catch security flaws before code is merged or deployed.
-- **Least Risk of Secrets Exposure**  
-  - Gitleaks flags any hardcoded credentials in your repository, preventing secret leaks.
-- **Consistent Testing**  
-  - Jest test suites ensure that functionality isn’t broken by new commits.
-- **Fail-Fast Pipeline**  
-  - Any severe issues (high vulnerabilities, failed tests, or leaked secrets) halt the pipeline.
+- **Least Privilege IAM Policies**  
+  - IAM roles (admins, developers, devsecops) each have only the permissions required.
+- **Automated IaC Security Scanning**  
+  - Checkov flags insecure configurations during pull requests, blocking them from merging if issues persist.
+- **Dedicated State Management**  
+  - Terraform’s state stored in an S3 backend, serving as a single source of truth and preventing local conflicts.
+- **Two-Step CI/CD Pipeline**  
+  - Splits security scanning (`iac-scan`) from the actual deployment (`iac-deploy`), ensuring only safe code is applied.
 
 ---
 
-## 4. Workflow 🔄
-1. **Code Changes**: When you push or open a PR affecting files in `Project-1/**`, GitHub Actions triggers the pipeline.
-2. **Dependency Installation**: The pipeline installs all packages (Express, Jest, etc.).
-3. **Security Scans**:
-   - **Semgrep** checks for insecure code patterns.
-   - **npm audit** detects known vulnerabilities in dependencies.
-   - **Gitleaks** scans for secrets.
-4. **Testing**:
-   - Jest runs unit/integration tests, ensuring the app’s core functionality is correct.
-5. **(Optional) Deployment**:
-   - If all previous checks pass, the pipeline can automatically deploy the latest code to a hosting environment (e.g., Heroku).
+## 4. CI/CD Workflow 🔄
+1. **Code Checkout & AWS Setup**  
+   - The pipeline retrieves source code from the `Project-1-IaC-Security` directory and configures AWS credentials via GitHub Actions secrets.
+2. **Terraform Init**  
+   - Runs `terraform init` within the project folder to prepare necessary plugins and modules.
+3. **Checkov Scan**  
+   - Uses `checkov -d ./Project-1-IaC-Security` to detect security misconfigurations before proceeding.
+4. **Plan & (If Safe) Deploy**  
+   - `terraform plan` helps validate infrastructure changes.  
+   - If scanning passes, the second job (`iac-deploy`) applies (`terraform apply -auto-approve`) the changes to AWS.
+
+> **Note:** The **`iac-deploy`** job only runs if the **`iac-scan`** step succeeds, reflecting a true *shift-left* security model.
 
 ---
 
 ## 5. Value for Organizations 💼
-- **Automated Security Gates**  
-  - Critical vulnerabilities are blocked from reaching production, improving overall security posture.
-- **Continuous Testing**  
-  - Ensures reliability and quick feedback loops for developers.
-- **Scalability**  
-  - This pipeline can easily be adapted to other Node.js projects or microservices.
-- **Compliance & Auditing**  
-  - Detailed logs of each security scan and test run are stored in GitHub Actions, aiding in regulatory compliance.
+- **Auditable Deployments**  
+  - Version-controlled Terraform code with automated plan/apply ensures traceability and repeatability.
+- **Reduced Attack Surface**  
+  - **Least privilege** IAM roles prevent excessive permissions and mitigate potential breaches.
+- **Early Issue Detection**  
+  - Checkov flags issues in pull requests, stopping insecure configurations from reaching production.
+- **Scalable & Repeatable**  
+  - Automated provisioning with Terraform in a managed CI/CD pipeline reduces manual errors and friction.
 
 ---
 
 ## 6. Conclusion ✅
-By integrating **SAST**, **SCA**, **secrets scanning**, and **automated testing** into a single GitHub Actions workflow, this project illustrates a **shift-left** approach that catches security and functional issues early. It empowers development teams to deliver **secure, high-quality code** with minimal manual intervention.
+By combining **Terraform**, **Checkov**, and **GitHub Actions** in a **two-step** (scan → deploy) pipeline, this project exemplifies **secure, repeatable** IaC practices. The workflow integrates seamlessly with existing Git-based processes, ensuring **only validated configurations** are ever deployed, thereby enhancing **compliance** and **infrastructure reliability**.
