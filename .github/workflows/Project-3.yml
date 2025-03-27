@@ -11,65 +11,71 @@ on:
       - "Project 3/**"
 
 jobs:
-  cicd-security:
-    name: CI/CD Security Pipeline
+  iac-scan:
+    name: IaC Scan
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Check out code
       - name: Check out code
         uses: actions/checkout@v2
 
-      # 2. Set up Node
-      - name: Set up Node
-        uses: actions/setup-node@v3
+      # Configure AWS Credentials so Terraform can access your AWS account.
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          node-version: '16'
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
 
-      # 3. Install dependencies
-      - name: Install Dependencies
-        working-directory: ./Project 3
-        run: npm install
+      # Set up Terraform
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.3.7
 
-      # 4. Install Semgrep (CLI via pip)
-      - name: Install Semgrep
-        working-directory: ./Project 3
-        run: pip install semgrep
+      # Initialize Terraform in the "3" folder
+      - name: Terraform Init
+        run: terraform -chdir="./Project 3 init
 
-      # 5. SAST with Semgrep
-      - name: SAST (Semgrep)
-        working-directory: ./Project 3
-        run: semgrep --config p/ci --include='Project 3/**/*.js'
+      # Install Checkov for IaC security scanning
+      - name: Install Checkov
+        run: pip install checkov
 
-      # 6. SCA with npm audit (Dependency check)
-      - name: SCA (npm audit)
-        working-directory: ./Project 3
-        run: npm audit --audit-level=high
+      # Run Checkov scan on the Terraform configuration
+      - name: Run Checkov Scan
+        run: checkov -d "./Project 3"
 
-      # 7. Install Gitleaks (Fixed version v8.20.1)
-      - name: Install Gitleaks
-        working-directory: ./Project 3
-        run: |
-          curl -LO https://github.com/gitleaks/gitleaks/releases/download/v8.20.1/gitleaks_8.20.1_linux_x64.tar.gz
-          tar -zxvf gitleaks_8.20.1_linux_x64.tar.gz
-          sudo mv gitleaks /usr/local/bin/
+      # Run Terraform Plan as an additional check
+      - name: Terraform Plan
+        run: terraform -chdir="./Project 3" plan
 
-      # 8. Secrets Scanning with Gitleaks
-      - name: Run Gitleaks
-        working-directory: ./Project 3
-        run: gitleaks detect --source . --exit-code 1
+  iac-deploy:
+    name: IaC Deploy
+    runs-on: ubuntu-latest
+    needs: [iac-scan]  # Only run if the scan succeeds
 
-      # 9. Run Jest Tests
-      - name: Run Tests
-        working-directory: ./Project 3
-        run: npm test
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
 
-      # 10. (Optional) Deploy Step
-      # - name: Deploy to Heroku
-      #   if: success()
-      #   working-directory: ./Project 3
-      #   run: |
-      #     heroku login
-      #     heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
-      #     git push heroku main
-      
+      # Configure AWS Credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+
+      # Set up Terraform
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.3.7
+
+      # Initialize Terraform
+      - name: Terraform Init
+        run: terraform -chdir="./Project 3" init
+
+      # Deploy the infrastructure with Terraform Apply
+      - name: Terraform Apply
+        run: terraform -chdir="./Project 3" apply -auto-approve
