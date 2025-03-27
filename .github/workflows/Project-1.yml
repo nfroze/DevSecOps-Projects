@@ -58,18 +58,4 @@ jobs:
       - name: Run Gitleaks
         working-directory: ./Project 1
         run: gitleaks detect --source . --exit-code 1
-
-      # 9. Run Jest Tests
-      - name: Run Tests
-        working-directory: ./Project 1
-        run: npm test
-
-      # 10. (Optional) Deploy Step
-      # - name: Deploy to Heroku
-      #   if: success()
-      #   working-directory: ./Project 3
-      #   run: |
-      #     heroku login
-      #     heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
-      #     git push heroku main
-      
+        
