@@ -1,4 +1,4 @@
-# 👋 Hi, I'm Noah Frost
+# Hi, I'm Noah Frost
 
 **Former Police Constable turned aspiring DevSecOps Engineer**, combining a background in criminology and law with hands-on experience in cybersecurity, cloud infrastructure, and secure software delivery.
 
