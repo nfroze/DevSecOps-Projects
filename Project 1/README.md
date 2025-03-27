@@ -1,4 +1,4 @@
-# 🛠️ Project 1: CI/CD Pipeline Security
+# 📁 Project 1: CI/CD Pipeline Security
 
 ## 1. Overview 🚀
 This project demonstrates how to **secure a CI/CD pipeline** for a Node.js application by integrating **automated security checks**:

@@ -1,35 +1,56 @@
-# DevSecOps Projects 🚀🔒
+# 👋 Hi, I'm [Your Name]
 
-This repository contains a collection of DevSecOps projects designed to demonstrate my skills and competencies across key areas such as Infrastructure as Code (IaC), Container Security, CI/CD Pipeline Security, and more. Each project highlights my hands-on experience with various DevSecOps tools and techniques.
+**Former Police Constable turned DevSecOps Engineer-in-Training**, combining a background in criminology and criminal justice with hands-on experience in cybersecurity, cloud infrastructure, and secure software development.
 
----
-
-## Projects
-
-### 📌 Project 1: CI/CD Pipeline Security
-- **Overview:** Building secure CI/CD pipelines that integrate automated security checks such as SAST, SCA, and vulnerability scanning.
-- **Tools:** GitHub Actions, CircleCI, Trivy, Checkov, SonarQube
-
-### 📌 Project 2: Container Security (Docker, ECS)
-- **Overview:** Setting up secure containerized environments with Docker image scanning and AWS ECS deployments.
-- **Tools:** GitHub Actions, Docker, Trivy, AWS ECS
-
-### 📌 Project 3: Infrastructure as Code (IaC) Security
-- **Overview:** Automating infrastructure deployment using Terraform with a focus on secure S3 bucket policies, IAM configurations, and IaC scanning.
-- **Tools:** GitHub Actions, Terraform, AWS, Checkov
-
-### 📌 Project 4: Threat Modeling & Incident Response
-- **Overview:** Developing threat models and implementing incident response strategies with proper mitigation controls.
-- **Tools:** Threat modeling frameworks, incident response playbooks, SIEM
+I’m passionate about building and securing systems the right way — from day one. I believe in shift-left security, automation, and continuous learning to keep systems resilient and trustworthy.
 
 ---
 
-## Notes 💡
+## 🔐 DevSecOps Projects
 
-These projects are intended to showcase my DevSecOps capabilities during interviews. Each project is fully documented and can be executed independently. Feel free to explore the individual project directories to see how each one demonstrates the implementation of modern security practices.
+### 📁 CI/CD Pipeline Security
+- Automated security checks using GitHub Actions
+- Integrated SAST, SCA, and IaC scanning with Trivy, Checkov, and secret detection
+- Secure build process with pull request checks and artifact validation
+
+### 🐳 Image and Application Security
+- Built and scanned Docker images for vulnerabilities using Trivy
+- Pushed to Docker Hub and securely deployed using Amazon ECS
+- Emphasized secure coding, image hardening, and runtime protection
+
+### ☁️ Infrastructure as Code (IaC) Security
+- Used Terraform to provision secure AWS infrastructure (S3, IAM, EC2)
+- Applied least-privilege IAM policies and S3 bucket security best practices
+- Integrated Checkov scans into CI for continuous IaC security validation
+
+### 🧠 Threat Modeling & Incident Response
+- Developed threat models using STRIDE and data flow diagrams
+- Identified risks, proposed mitigations, and created a mock incident response plan
+- Focused on proactive risk management and post-incident recovery strategy
 
 ---
 
-## License 🔒
+## 📚 Certifications in Progress
 
-This repository is for educational purposes only and is not open for external contributions.
+- CompTIA Security+
+- AWS Cloud Practitioner
+- Terraform Associate
+- GitHub Actions CI/CD Security
+- AWS Certified AI Practitioner (with AI/ML Security training)
+
+---
+
+## 🚀 What Drives Me
+
+Security is more than a layer — it's a mindset.  
+I bring discipline, adaptability, and a problem-solving approach shaped by real-world frontline experience. Whether it's securing pipelines, infrastructure, or applications, I’m all in.
+
+---
+
+## 📬 Let’s Connect
+
+- 🔗 [LinkedIn](https://linkedin.com/in/yourname)
+
+---
+
+> “From protecting people to protecting systems — I build with security in mind, from the very first line of code.”
