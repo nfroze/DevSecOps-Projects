@@ -1,4 +1,4 @@
-# 🐳 Project 2: Image and Application Security
+# 🐳 Project 2: Image and Runtime Application Security
 
 ## 1. Overview 🚀
 This project demonstrates how to **securely build, scan, and deploy** a containerized application using **Docker** and **Amazon ECS**—with an additional focus on dynamic application security testing (DAST). The CI/CD pipeline employs **Trivy** for container image vulnerability scanning and **OWASP ZAP** for DAST scanning, ensuring that both the static image and the live application are secure before updates are pushed to production.
