@@ -35,7 +35,7 @@ jobs:
 
       # Initialize Terraform in the "3" folder
       - name: Terraform Init
-        run: terraform -chdir="./Project 3 init
+        run: terraform -chdir="./Project 3" init
 
       # Install Checkov for IaC security scanning
       - name: Install Checkov
