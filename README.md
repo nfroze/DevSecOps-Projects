@@ -6,27 +6,19 @@ This repository contains a collection of DevSecOps projects designed to demonstr
 
 ## Projects
 
-### 📌 Project 1: Infrastructure as Code (IaC) Security
-- **Overview:** Automating infrastructure deployment using Terraform with a focus on secure S3 bucket policies, IAM configurations, and IaC scanning.
-- **Tools:** GitHub Actions, Terraform, AWS, Checkov
+### 📌 Project 1: CI/CD Pipeline Security
+- **Overview:** Building secure CI/CD pipelines that integrate automated security checks such as SAST, SCA, and vulnerability scanning.
+- **Tools:** GitHub Actions, CircleCI, Trivy, Checkov, SonarQube
 
 ### 📌 Project 2: Container Security (Docker, ECS)
 - **Overview:** Setting up secure containerized environments with Docker image scanning and AWS ECS deployments.
 - **Tools:** GitHub Actions, Docker, Trivy, AWS ECS
 
-### 📌 Project 3: CI/CD Pipeline Security
-- **Overview:** Building secure CI/CD pipelines that integrate automated security checks such as SAST, SCA, and vulnerability scanning.
-- **Tools:** GitHub Actions, CircleCI, Trivy, Checkov, SonarQube
+### 📌 Project 3: Infrastructure as Code (IaC) Security
+- **Overview:** Automating infrastructure deployment using Terraform with a focus on secure S3 bucket policies, IAM configurations, and IaC scanning.
+- **Tools:** GitHub Actions, Terraform, AWS, Checkov
 
-### 📌 Project 4: Application Security & Penetration Testing
-- **Overview:** Conducting vulnerability assessments on applications using industry-standard tools.
-- **Tools:** Burp Suite, OWASP ZAP, Metasploit
-
-### 📌 Project 5: Cloud Security
-- **Overview:** Securing cloud environments by applying best practices in IAM, encryption, logging, and monitoring.
-- **Tools:** AWS, GCP, Azure, CloudFormation, IAM
-
-### 📌 Project 6: Threat Modeling & Incident Response
+### 📌 Project 4: Threat Modeling & Incident Response
 - **Overview:** Developing threat models and implementing incident response strategies with proper mitigation controls.
 - **Tools:** Threat modeling frameworks, incident response playbooks, SIEM
 
