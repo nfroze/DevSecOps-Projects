@@ -9,8 +9,8 @@ terraform {
     }
   }
   backend "s3" {
-    bucket  = "my-terraform-state-bucket-devsecops-project-1"  # Updated bucket name
-    key     = "project-1-iac-security/terraform.tfstate"
+    bucket  = "my-terraform-state-bucket-devsecops-project-3"  # Updated bucket name
+    key     = "project-3/terraform.tfstate"
     region  = "eu-west-2"
     encrypt = true
   }
