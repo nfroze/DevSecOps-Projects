@@ -26,7 +26,7 @@ By shifting these checks left, we ensure that only secure, well-tested code is m
 
 ## 3. Security Highlights 🔒
 - **Early Vulnerability Detection**  
-  - `npm audit` and Semgrep catch security flaws before code is merged or deployed.
+  - npm audit and Semgrep catch security flaws before code is merged or deployed.
 - **Least Risk of Secrets Exposure**  
   - Gitleaks flags any hardcoded credentials in your repository, preventing secret leaks.
 - **Fail-Fast Pipeline**  
@@ -36,13 +36,11 @@ By shifting these checks left, we ensure that only secure, well-tested code is m
 
 ## 4. Workflow 🔄
 1. **Code Changes**: When you push or open a PR affecting files in `Project-1/**`, GitHub Actions triggers the pipeline.
-2. **Dependency Installation**: The pipeline installs all packages (Express, etc.).
+2. **Dependency Installation**: The pipeline installs all packages and dependencies required to run the app.
 3. **Security Scans**:
-   - **Semgrep** checks for insecure code patterns.
-   - **npm audit** detects known vulnerabilities in dependencies.
+   - **Semgrep** checks for Common Weakness Enumerations.
+   - **npm audit** detects Common Vulnerabilities and Exposures
    - **Gitleaks** scans for secrets.
-4. **(Optional) Deployment**:
-   - If all previous checks pass, the pipeline can automatically deploy the latest code to a hosting environment (e.g., Heroku).
 
 ---
 
