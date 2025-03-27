@@ -29,9 +29,15 @@ I’m passionate about building and securing systems the right way — from CI/C
 - Automated misconfiguration checks during PRs to ensure secure-by-default deployments
 
 ### 🧠 Project 4: Threat Modeling & Incident Response (🚧 In Progress)
-- Currently developing threat models using **STRIDE** and **data flow diagrams**
-- Simulating an incident response workflow using **NIST IR guidelines**
-- Will document detection, containment, and recovery strategies for common attack scenarios
+- Simulating a full threat modeling workshop for a fictional cloud-based application
+- Includes **HLD** and **DFD** diagrams to map architecture, data flows, and trust boundaries
+- Applies the **STRIDE** threat model to assess control gaps across system components
+- Maps attacker TTPs using the **MITRE ATT&CK Framework**
+- Uses the **Cyber Kill Chain** to break down the lifecycle of several simulated attacks
+- Conducts an **inherent risk assessment** to prioritize threats based on likelihood and impact
+- Will simulate a **NIST-aligned incident response plan** based on one modeled attack scenario
+
+> 📌 The fictional company and scenario design are currently in development. This project will be updated as each section is completed.
 
 ---
 
